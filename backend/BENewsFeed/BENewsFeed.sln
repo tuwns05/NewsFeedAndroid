@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35818.85 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BENewsFeed", "BENewsFeed\BENewsFeed.csproj", "{F821153D-9362-46B4-AB53-E084B9C485C1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F821153D-9362-46B4-AB53-E084B9C485C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F821153D-9362-46B4-AB53-E084B9C485C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F821153D-9362-46B4-AB53-E084B9C485C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F821153D-9362-46B4-AB53-E084B9C485C1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F7B5C214-06F3-49C4-AA67-1B73E976843F}
+	EndGlobalSection
+EndGlobal
