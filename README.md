@@ -20,6 +20,7 @@ Lưu bài vào danh sách yêu thích (Room Database)
 Mở bài gốc trên trình duyệt (Intent)
 Chia sẻ bài viết ra ứng dụng khác (Content Provider)
 Toast thông báo khi lưu thành công
+Sử dụng Text To Speech API của Android xây dựng chức năng tự động đọc báo.
 
 3. Tin đã lưu
 
