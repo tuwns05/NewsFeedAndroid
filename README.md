@@ -1,5 +1,5 @@
 NewsFeed — Đọc báo thông minh
-Ứng dụng Android đọc tin tức tổng hợp từ nhiều nguồn báo Việt Nam qua RSS Feed, kết hợp .NET REST API backend và Kotlin Jetpack Compose.
+Ứng dụng Android đọc tin tức tổng hợp từ nhiều nguồn báo Việt Nam qua RSS Feed, kết hợp .NET REST API backend và Kotlin Jetpack Compose, Firebase Authentication.
 
 Công nghệ sử dụng
 Backend: ASP.NET Core Web API, Entity Framework Core, SQL Server
