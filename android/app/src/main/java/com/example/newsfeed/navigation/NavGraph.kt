@@ -33,7 +33,7 @@ fun NavGraph(navController: NavHostController) {
 
         }
         composable (Routes.HOME){
-            HomeScreen(  onArtcleClick = { article ->
+            HomeScreen(  onArticleClick =   { article ->
                 // xử lý khi click bài báo
             })
         }
