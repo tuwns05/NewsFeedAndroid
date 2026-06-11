@@ -105,8 +105,14 @@ fun HomeScreen(
 fun HomeHeader(){
     Text(
         text = "News Feed",
-        style = MaterialTheme.typography.headlineSmall,
-        modifier = Modifier.padding(bottom = 8.dp)
+        style = MaterialTheme.typography.headlineMedium.copy(
+            fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
+        )
+    )
+    Text(
+        text = "Tin tức mới nhất hôm nay",
+        style = MaterialTheme.typography.bodyMedium,
+        color = MaterialTheme.colorScheme.onSurfaceVariant
     )
 }
 
@@ -114,12 +120,14 @@ fun HomeHeader(){
 @Composable
 fun SourceSection(
     sources: List<Pair<String, Int?>>,
-    onSourceSelected: (Int?) -> Unit
+    onSourceSelected: (Int?) -> Unit,
+    selectedSource: Int? = null
 ){
     Column {
         Text(
             text = "Nguồn báo" ,
-            style = MaterialTheme.typography.titleMedium,
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(bottom = 8.dp)
         )
         LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -127,8 +135,8 @@ fun SourceSection(
                 (name,id) ->
                 FilterChip(
                 onClick = { onSourceSelected(id) },
-                label = { Text(name) },
-                    selected = false,
+                    label = { Text(name) },
+                    selected = id == selectedSource,
                     modifier = Modifier.animateContentSize()
                 )
             }
@@ -140,12 +148,14 @@ fun SourceSection(
 @Composable
 fun CategorySection(
     categories : List<Pair<String, String?>>,
-    onCategorySelected: (String?) -> Unit
+    onCategorySelected: (String?) -> Unit,
+    selectedCategory: String? = null
 ){
     Column {
         Text(
             text = "Chuyên mục",
-            style = MaterialTheme.typography.titleMedium,
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(bottom = 8.dp)
         )
         LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -208,10 +218,13 @@ fun ArticleCard(
             .animateContentSize(),
         onClick = onClick,
         elevation = CardDefaults.cardElevation(
-            defaultElevation = 2.dp,
+            defaultElevation = 0.dp,
             pressedElevation = 6.dp
         ),
-        shape = RoundedCornerShape(12.dp)
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
+        )
     ) {
         Row(
             modifier = Modifier
@@ -222,11 +235,14 @@ fun ArticleCard(
 
 
             Column(
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                 Text(
-                    text = article.title,
-                    style = MaterialTheme.typography.titleMedium,
+                    text = article.title ,
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold
+                    ),
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -313,108 +329,3 @@ fun EmptyView() {
         }
     }
 }
-//@Composable
-//fun HomeScreen(
-//    viewModel: HomeViewModel = viewModel(),
-//    onArtcleClick : (ArticleDto) ->Unit
-//) {
-//    val uiState by viewModel.uiState.collectAsState()
-//
-//    Column(
-//        modifier = Modifier
-//            .fillMaxSize()
-//            .padding(16.dp)
-//    ) {
-//        Text(
-//            text = "NEWS FEED",
-//            style = MaterialTheme.typography.headlineSmall
-//        )
-//        Spacer(modifier = Modifier.height(16.dp))
-//        // Nguồn báo
-//        Text("Nguồn báo")
-//
-//        LazyRow {
-//            items(sources) { (name, id) ->
-//                Button(
-//                    onClick = {
-//                        viewModel.onSourceSelected(id)
-//                    }
-//                ) {
-//                    Text(name)
-//                }
-//            }
-//        }
-//
-//        Spacer(modifier = Modifier.height(12.dp))
-//
-//        // Chuyên mục
-//        Text("Chuyên mục")
-//
-//        LazyRow {
-//            items(categories) { (name, slug) ->
-//                Button(
-//                    onClick = {
-//                        viewModel.onCategorySelected(slug)
-//                    }
-//                ) {
-//                    Text(name)
-//                }
-//            }
-//        }
-//
-//        Spacer(modifier = Modifier.height(16.dp))
-//
-//        when {
-//
-//            uiState.isLoading -> {
-//                Text("Đang tải dữ liệu...")
-//            }
-//
-//            uiState.error != null -> {
-//                Text("Lỗi: ${uiState.error}")
-//            }
-//
-//            else -> {
-//                LazyColumn {
-//
-//                    items(uiState.articles) { article ->
-//
-//                        Card(
-//                            modifier = Modifier
-//                                .fillMaxWidth()
-//                                .padding(vertical = 4.dp),
-//                            onClick = {
-//                                onArtcleClick(article)
-//                            }
-//                        ) {
-//
-//                            Column(
-//                                modifier = Modifier.padding(12.dp)
-//                            ) {
-//
-//                                Text(
-//                                    text = article.title,
-//                                    style = MaterialTheme.typography.titleMedium
-//                                )
-//
-//                                Spacer(
-//                                    modifier = Modifier.height(4.dp)
-//                                )
-//
-//                                Text(
-//                                    text = article.sourceName
-//                                )
-//
-//                                Text(
-//                                    text = article.category
-//                                )
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//
-//        }
-//
-//    }
-//}
