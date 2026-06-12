@@ -1,7 +1,8 @@
 package com.example.newsfeed.ui.screen
 
-import androidx.compose.ui.graphics.Color
+
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,34 +20,41 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Article
 import androidx.compose.material.icons.filled.Article
+import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.Error
-import androidx.compose.material3.AssistChip
-import androidx.compose.material3.AssistChipDefaults
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Newspaper
+import androidx.compose.material.icons.outlined.BookmarkBorder
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Newspaper
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.newsfeed.data.remote.dto.ArticleDto
 import com.example.newsfeed.ui.model.HomeUiState
 import com.example.newsfeed.ui.model.HomeViewModel
-import okio.Source
+
 
 
 // Danh sách chuyên mục
-private val categories = listOf(
+ val categories = listOf(
     "Mới nhất"  to null,
     "Công nghệ" to "cong-nghe",
     "Thể thao"  to "the-thao",
@@ -62,6 +70,14 @@ private val sources = listOf(
     "Tuổi Trẻ"  to 2,
     "Thanh Niên" to 3
 )
+//data class cho từng tab của bottom navigation
+data class BottomNavItem(
+    val label: String,
+    val selectedIcon: ImageVector,
+    val unselectedIcon: ImageVector
+)
+
+
 
 @Composable
 fun HomeScreen(
@@ -73,26 +89,20 @@ fun HomeScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
     ) {
-        HomeHeader()
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        SourceSection(
-            sources = sources,
-            onSourceSelected = { viewModel.onSourceSelected(it) }
-        )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
+        Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+        Spacer(modifier = Modifier.height(8.dp))
         CategorySection(
             categories = categories,
             onCategorySelected = { viewModel.onCategorySelected(it) }
         )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
+        // THÊM: divider ngăn cách filter và danh sách bài báo
+        HorizontalDivider(
+            thickness = 1.dp,
+            color = MaterialTheme.colorScheme.outlineVariant
+        )
         ArticleList(
             uiState = uiState,
             onArticleClick = onArticleClick
@@ -106,7 +116,7 @@ fun HomeHeader(){
     Text(
         text = "News Feed",
         style = MaterialTheme.typography.headlineMedium.copy(
-            fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
+            fontWeight = FontWeight.Bold
         )
     )
     Text(
@@ -162,7 +172,7 @@ fun CategorySection(
             items(categories) { (name, slug) ->
                 FilterChip(
                     onClick = { onCategorySelected(slug) },
-                    selected = false,
+                    selected =  slug == selectedCategory,
                     label = { Text(name) }
                 )
             }
@@ -190,15 +200,21 @@ fun ArticleList(
         }
 
         uiState.articles.isEmpty() -> {
-            EmptyView()
+             EmptyView()
         }else->{
-            LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            LazyColumn {
                 items(
                     items= uiState.articles,
                     key = {it.id}
                 ){
                     article ->ArticleCard(article = article,
                         onClick = {onArticleClick(article)})
+                    //divider mỏng giữa các bài báo, có padding ngang
+                    HorizontalDivider(
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        thickness = 0.5.dp,
+                        color = MaterialTheme.colorScheme.outlineVariant
+                    )
                 }
             }
         }
@@ -211,121 +227,115 @@ fun ArticleList(
 fun ArticleCard(
     article: ArticleDto,
     onClick: () -> Unit
-){
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .animateContentSize(),
+) {
+    Surface(
         onClick = onClick,
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 0.dp,
-            pressedElevation = 6.dp
-        ),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
-        )
+        color = MaterialTheme.colorScheme.surface,
+        modifier = Modifier.fillMaxWidth()
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalAlignment = Alignment.Top
         ) {
-            // Thêm ảnh đại diện nếu có
-
 
             Column(
                 modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(6.dp)
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 Text(
-                    text = article.title ,
+                    text = article.sourceName,
                     style = MaterialTheme.typography.bodyLarge.copy(
-                        fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.primary
                     ),
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
                 )
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = article.title,
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        fontWeight = FontWeight.Medium,
+                        lineHeight = 22.sp
+                    ),
+                    maxLines = 3,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Text(
+                    text = article.description,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
 
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Chip(
-                        text = article.sourceName,
-                        containerColor = MaterialTheme.colorScheme.secondaryContainer
-                    )
-                    Chip(
-                        text = article.category,
-                        containerColor = MaterialTheme.colorScheme.secondaryContainer
-                    )
-                }
+                Text(
+                    text = article.category,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            // THÊM: thumbnail placeholder bên phải
+            // Khi có ảnh thật: thay Box này bằng AsyncImage(model = article.imageUrl) từ Coil
+            Box(
+                modifier = Modifier
+                    .size(width = 80.dp, height = 80.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(MaterialTheme.colorScheme.secondaryContainer),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.Article,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.4f),
+                    modifier = Modifier.size(28.dp)
+                )
             }
         }
     }
 }
-
-
-// Components hỗ trợ
-@Composable
-fun Chip(
-    text: String,
-    containerColor: Color
-) {
-    AssistChip(
-        onClick = {},
-        label = {
-            Text(text)
-        },
-        colors = AssistChipDefaults.assistChipColors(
-            containerColor = containerColor
-        ),
-        modifier = Modifier.height(32.dp)
-    )
-}
-@Composable
-fun ErrorView(error: String) {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Icon(
-                imageVector = Icons.Default.Error,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.error,
-                modifier = Modifier.size(48.dp)
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = error,
-                color = MaterialTheme.colorScheme.error,
-                textAlign = TextAlign.Center
-            )
+    @Composable
+    fun ErrorView(error: String) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Icon(
+                    imageVector = Icons.Default.Error,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.size(48.dp)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = error,
+                    color = MaterialTheme.colorScheme.error,
+                    textAlign = TextAlign.Center
+                )
+            }
         }
     }
-}
 
-@Composable
-fun EmptyView() {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Icon(
-                imageVector = Icons.Default.Article,
-                contentDescription = null,
-                modifier = Modifier.size(64.dp),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "Không có bài viết nào",
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+    @Composable
+    fun EmptyView() {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Icon(
+                    imageVector = Icons.Default.Article,
+                    contentDescription = null,
+                    modifier = Modifier.size(64.dp),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "Không có bài viết nào",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
     }
-}
+
