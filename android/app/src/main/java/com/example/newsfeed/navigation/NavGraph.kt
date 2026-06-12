@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.newsfeed.data.repository.AuthRepository
 import com.example.newsfeed.ui.screen.HomeScreen
+import com.example.newsfeed.ui.screen.MainScreen
 import com.example.newsfeed.ui.screen.authen.LoginScreen
 
 @Composable
@@ -32,11 +33,15 @@ fun NavGraph(navController: NavHostController) {
             })
 
         }
-        composable (Routes.HOME){
-            HomeScreen(  onArticleClick =   { article ->
-                // xử lý khi click bài báo
-            })
+        composable(Routes.HOME){
+            MainScreen(
+                onArticleClick = { article ->
+                    // Khi nhấn vào bài báo, chuyển sang màn hình chi tiết
+
+                }
+            )
         }
+
 
     }
 }
