@@ -9,10 +9,11 @@
       "BENewsFeed/1.0.0": {
         "dependencies": {
           "Microsoft.EntityFrameworkCore": "9.0.0",
+          "Microsoft.EntityFrameworkCore.Design": "9.0.0",
           "Microsoft.EntityFrameworkCore.SqlServer": "9.0.0",
           "Microsoft.EntityFrameworkCore.Tools": "9.0.0",
           "Swashbuckle.AspNetCore": "6.6.2",
-          "System.ServiceModel.Syndication": "10.0.9"
+          "System.ServiceModel.Syndication": "9.0.0"
         },
         "runtime": {
           "BENewsFeed.dll": {}
@@ -1026,11 +1027,11 @@
         }
       },
       "System.Security.Principal.Windows/5.0.0": {},
-      "System.ServiceModel.Syndication/10.0.9": {
+      "System.ServiceModel.Syndication/9.0.0": {
         "runtime": {
           "lib/net8.0/System.ServiceModel.Syndication.dll": {
-            "assemblyVersion": "10.0.0.9",
-            "fileVersion": "10.0.926.27113"
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.24.52809"
           }
         }
       },
@@ -1649,12 +1650,12 @@
       "path": "system.security.principal.windows/5.0.0",
       "hashPath": "system.security.principal.windows.5.0.0.nupkg.sha512"
     },
-    "System.ServiceModel.Syndication/10.0.9": {
+    "System.ServiceModel.Syndication/9.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-ZxViVHpGq/a/lZsNZlxeAO1e+U0ViqtB99gkQj0W8rD7FmIs1iyL7Ip8d7w9S76EZhRW8Obc74zuoIJpITqD6A==",
-      "path": "system.servicemodel.syndication/10.0.9",
-      "hashPath": "system.servicemodel.syndication.10.0.9.nupkg.sha512"
+      "sha512": "sha512-DbSOsS63crGeSL1kEbcd2d+G+RQnZ5hbhGMsNWC0mjYqNIpvlZq2tSx5iozhT9RZcbCW3WvZ9qRi0OsXM1pfgg==",
+      "path": "system.servicemodel.syndication/9.0.0",
+      "hashPath": "system.servicemodel.syndication.9.0.0.nupkg.sha512"
     },
     "System.Text.Encoding/4.3.0": {
       "type": "package",

@@ -1569,7 +1569,7 @@
           }
         }
       },
-      "System.ServiceModel.Syndication/10.0.9": {
+      "System.ServiceModel.Syndication/9.0.0": {
         "type": "package",
         "compile": {
           "lib/net8.0/System.ServiceModel.Syndication.dll": {
@@ -4877,22 +4877,21 @@
         "version.txt"
       ]
     },
-    "System.ServiceModel.Syndication/10.0.9": {
-      "sha512": "ZxViVHpGq/a/lZsNZlxeAO1e+U0ViqtB99gkQj0W8rD7FmIs1iyL7Ip8d7w9S76EZhRW8Obc74zuoIJpITqD6A==",
+    "System.ServiceModel.Syndication/9.0.0": {
+      "sha512": "DbSOsS63crGeSL1kEbcd2d+G+RQnZ5hbhGMsNWC0mjYqNIpvlZq2tSx5iozhT9RZcbCW3WvZ9qRi0OsXM1pfgg==",
       "type": "package",
-      "path": "system.servicemodel.syndication/10.0.9",
+      "path": "system.servicemodel.syndication/9.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Icon.png",
+        "LICENSE.TXT",
         "PACKAGE.md",
         "THIRD-PARTY-NOTICES.TXT",
         "buildTransitive/net461/System.ServiceModel.Syndication.targets",
         "buildTransitive/net462/_._",
         "buildTransitive/net8.0/_._",
         "buildTransitive/netcoreapp2.0/System.ServiceModel.Syndication.targets",
-        "lib/net10.0/System.ServiceModel.Syndication.dll",
-        "lib/net10.0/System.ServiceModel.Syndication.xml",
         "lib/net462/System.ServiceModel.Syndication.dll",
         "lib/net462/System.ServiceModel.Syndication.xml",
         "lib/net8.0/System.ServiceModel.Syndication.dll",
@@ -4901,7 +4900,7 @@
         "lib/net9.0/System.ServiceModel.Syndication.xml",
         "lib/netstandard2.0/System.ServiceModel.Syndication.dll",
         "lib/netstandard2.0/System.ServiceModel.Syndication.xml",
-        "system.servicemodel.syndication.10.0.9.nupkg.sha512",
+        "system.servicemodel.syndication.9.0.0.nupkg.sha512",
         "system.servicemodel.syndication.nuspec",
         "useSharedDesignerContext.txt"
       ]
@@ -5209,10 +5208,11 @@
   "projectFileDependencyGroups": {
     "net8.0": [
       "Microsoft.EntityFrameworkCore >= 9.0.0",
+      "Microsoft.EntityFrameworkCore.Design >= 9.0.0",
       "Microsoft.EntityFrameworkCore.SqlServer >= 9.0.0",
       "Microsoft.EntityFrameworkCore.Tools >= 9.0.0",
       "Swashbuckle.AspNetCore >= 6.6.2",
-      "System.ServiceModel.Syndication >= 10.0.9"
+      "System.ServiceModel.Syndication >= 9.0.0"
     ]
   },
   "packageFolders": {
@@ -5270,6 +5270,12 @@
             "target": "Package",
             "version": "[9.0.0, )"
           },
+          "Microsoft.EntityFrameworkCore.Design": {
+            "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+            "suppressParent": "All",
+            "target": "Package",
+            "version": "[9.0.0, )"
+          },
           "Microsoft.EntityFrameworkCore.SqlServer": {
             "target": "Package",
             "version": "[9.0.0, )"
@@ -5286,7 +5292,7 @@
           },
           "System.ServiceModel.Syndication": {
             "target": "Package",
-            "version": "[10.0.9, )"
+            "version": "[9.0.0, )"
           }
         },
         "imports": [

@@ -3,10 +3,12 @@ package com.example.newsfeed.ui.screen
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -26,12 +28,17 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Newspaper
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.outlined.BookmarkBorder
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Newspaper
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.runtime.collectAsState
+import com.example.newsfeed.ui.model.HomeUiState
 
 
 // danh sách tab bottom nav
@@ -43,14 +50,13 @@ private val bottomNavItems = listOf(
 @Composable
 fun MainScreen(  viewModel: HomeViewModel = viewModel(), onArticleClick: (ArticleDto) -> Unit) {
     var selectedTab by remember { mutableStateOf(0) }
-
+    val uiState by viewModel.uiState.collectAsState()
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+        Row(modifier = Modifier.padding(horizontal = 16.dp)) {
             Spacer(modifier = Modifier.height(16.dp))
             HomeHeader()
-
         }
 
         HorizontalDivider(
@@ -105,4 +111,6 @@ fun MainScreen(  viewModel: HomeViewModel = viewModel(), onArticleClick: (Articl
         }
     }
 }
+
+
 

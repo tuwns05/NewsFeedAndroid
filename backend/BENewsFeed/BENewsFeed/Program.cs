@@ -1,4 +1,5 @@
-using BENewsFeed.Models;
+﻿using BENewsFeed.Models;
+using BENewsFeed.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +11,11 @@ builder.Services.AddDbContext<NewsFeedDbContext>(options =>
         builder.Configuration.GetConnectionString("DefaultConnection")
     ));
 
+// Đăng ký RssParseServices
+builder.Services.AddScoped<RssParseServices>();
+
+// Nếu dùng BackgroundService thì đăng ký thêm
+builder.Services.AddHostedService<NewsUpdateService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

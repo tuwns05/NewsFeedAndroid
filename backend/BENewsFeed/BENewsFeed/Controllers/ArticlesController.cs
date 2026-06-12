@@ -1,5 +1,6 @@
 ﻿using BENewsFeed.dto;
 using BENewsFeed.Models;
+using BENewsFeed.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,15 +11,16 @@ namespace BENewsFeed.Controllers
     public class ArticlesController : Controller
     {
         private readonly NewsFeedDbContext _context;
+        private readonly RssParseServices _rssService;
 
-        public ArticlesController(NewsFeedDbContext context)
+        public ArticlesController(NewsFeedDbContext context, RssParseServices rssService)
         {
             _context = context;
+            _rssService = rssService;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] string? category, [FromQuery] int? sourceId,
-            [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        public async Task<IActionResult> GetAll([FromQuery] string? category, [FromQuery] int? sourceId)
         {
             var query = _context.Articles.Include(a=> a.Source).Include(a => a.Category).AsQueryable();
 
@@ -37,8 +39,6 @@ namespace BENewsFeed.Controllers
 
                 var articles = await query
             .OrderByDescending(a => a.PublishedAt)
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
             .Select(a => new ArticleDto
             {
                 Id = a.Id,
@@ -83,6 +83,30 @@ namespace BENewsFeed.Controllers
                 return NotFound();
             }
             return Ok(article);
+        }
+
+        [HttpPost("refresh")]
+        public async Task<IActionResult> Refresh()
+        {
+            try
+            {
+                await _rssService.FetchAllSoucesAsync();
+
+                return Ok(new
+                {
+                    success = true,
+                    message = "Cập nhật tin tức thành công."
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    success = false,
+                    message = "Có lỗi xảy ra khi cập nhật tin tức.",
+                    error = ex.Message
+                });
+            }
         }
     }
 }

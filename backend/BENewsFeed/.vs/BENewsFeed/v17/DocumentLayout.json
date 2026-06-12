@@ -3,12 +3,28 @@
   "WorkspaceRootPath": "C:\\Users\\FPTSHOP\\NewsFeedAndroid\\backend\\BENewsFeed\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{F821153D-9362-46B4-AB53-E084B9C485C1}|BENewsFeed\\BENewsFeed.csproj|c:\\users\\fptshop\\newsfeedandroid\\backend\\benewsfeed\\benewsfeed\\controllers\\sourcescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F821153D-9362-46B4-AB53-E084B9C485C1}|BENewsFeed\\BENewsFeed.csproj|solutionrelative:benewsfeed\\controllers\\sourcescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{F821153D-9362-46B4-AB53-E084B9C485C1}|BENewsFeed\\BENewsFeed.csproj|c:\\users\\fptshop\\newsfeedandroid\\backend\\benewsfeed\\benewsfeed\\controllers\\articlescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{F821153D-9362-46B4-AB53-E084B9C485C1}|BENewsFeed\\BENewsFeed.csproj|solutionrelative:benewsfeed\\controllers\\articlescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F821153D-9362-46B4-AB53-E084B9C485C1}|BENewsFeed\\BENewsFeed.csproj|c:\\users\\fptshop\\newsfeedandroid\\backend\\benewsfeed\\benewsfeed\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F821153D-9362-46B4-AB53-E084B9C485C1}|BENewsFeed\\BENewsFeed.csproj|solutionrelative:benewsfeed\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F821153D-9362-46B4-AB53-E084B9C485C1}|BENewsFeed\\BENewsFeed.csproj|c:\\users\\fptshop\\newsfeedandroid\\backend\\benewsfeed\\benewsfeed\\services\\rssparseservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F821153D-9362-46B4-AB53-E084B9C485C1}|BENewsFeed\\BENewsFeed.csproj|solutionrelative:benewsfeed\\services\\rssparseservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F821153D-9362-46B4-AB53-E084B9C485C1}|BENewsFeed\\BENewsFeed.csproj|c:\\users\\fptshop\\newsfeedandroid\\backend\\benewsfeed\\benewsfeed\\services\\newsupdateservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F821153D-9362-46B4-AB53-E084B9C485C1}|BENewsFeed\\BENewsFeed.csproj|solutionrelative:benewsfeed\\services\\newsupdateservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F821153D-9362-46B4-AB53-E084B9C485C1}|BENewsFeed\\BENewsFeed.csproj|c:\\users\\fptshop\\newsfeedandroid\\backend\\benewsfeed\\benewsfeed\\weatherforecast.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F821153D-9362-46B4-AB53-E084B9C485C1}|BENewsFeed\\BENewsFeed.csproj|solutionrelative:benewsfeed\\weatherforecast.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F821153D-9362-46B4-AB53-E084B9C485C1}|BENewsFeed\\BENewsFeed.csproj|c:\\users\\fptshop\\newsfeedandroid\\backend\\benewsfeed\\benewsfeed\\controllers\\categoriescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F821153D-9362-46B4-AB53-E084B9C485C1}|BENewsFeed\\BENewsFeed.csproj|solutionrelative:benewsfeed\\controllers\\categoriescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -18,53 +34,93 @@
       "DocumentGroups": [
         {
           "DockedWidth": 13,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 4,
           "Children": [
             {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "SourcesController.cs",
-              "DocumentMoniker": "C:\\Users\\FPTSHOP\\NewsFeedAndroid\\backend\\BENewsFeed\\BENewsFeed\\Controllers\\SourcesController.cs",
-              "RelativeDocumentMoniker": "BENewsFeed\\Controllers\\SourcesController.cs",
-              "ToolTip": "C:\\Users\\FPTSHOP\\NewsFeedAndroid\\backend\\BENewsFeed\\BENewsFeed\\Controllers\\SourcesController.cs",
-              "RelativeToolTip": "BENewsFeed\\Controllers\\SourcesController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-10T08:19:18.952Z",
-              "EditorCaption": ""
-            },
-            {
               "$type": "Bookmark",
-              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "ArticlesController.cs",
-              "DocumentMoniker": "C:\\Users\\FPTSHOP\\NewsFeedAndroid\\backend\\BENewsFeed\\BENewsFeed\\Controllers\\ArticlesController.cs",
-              "RelativeDocumentMoniker": "BENewsFeed\\Controllers\\ArticlesController.cs",
-              "ToolTip": "C:\\Users\\FPTSHOP\\NewsFeedAndroid\\backend\\BENewsFeed\\BENewsFeed\\Controllers\\ArticlesController.cs",
-              "RelativeToolTip": "BENewsFeed\\Controllers\\ArticlesController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAfAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-10T08:18:52.007Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+              "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
             },
             {
               "$type": "Bookmark",
               "Name": "ST:135:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "WeatherForecast.cs",
+              "DocumentMoniker": "C:\\Users\\FPTSHOP\\NewsFeedAndroid\\backend\\BENewsFeed\\BENewsFeed\\WeatherForecast.cs",
+              "RelativeDocumentMoniker": "BENewsFeed\\WeatherForecast.cs",
+              "ToolTip": "C:\\Users\\FPTSHOP\\NewsFeedAndroid\\backend\\BENewsFeed\\BENewsFeed\\WeatherForecast.cs",
+              "RelativeToolTip": "BENewsFeed\\WeatherForecast.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-12T02:31:32.833Z",
+              "EditorCaption": ""
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{1c64b9c2-e352-428e-a56d-0ace190b99a6}"
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "CategoriesController.cs",
+              "DocumentMoniker": "C:\\Users\\FPTSHOP\\NewsFeedAndroid\\backend\\BENewsFeed\\BENewsFeed\\Controllers\\CategoriesController.cs",
+              "RelativeDocumentMoniker": "BENewsFeed\\Controllers\\CategoriesController.cs",
+              "ToolTip": "C:\\Users\\FPTSHOP\\NewsFeedAndroid\\backend\\BENewsFeed\\BENewsFeed\\Controllers\\CategoriesController.cs",
+              "RelativeToolTip": "BENewsFeed\\Controllers\\CategoriesController.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-12T02:31:12.767Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ArticlesController.cs",
+              "DocumentMoniker": "C:\\Users\\FPTSHOP\\NewsFeedAndroid\\backend\\BENewsFeed\\BENewsFeed\\Controllers\\ArticlesController.cs",
+              "RelativeDocumentMoniker": "BENewsFeed\\Controllers\\ArticlesController.cs",
+              "ToolTip": "C:\\Users\\FPTSHOP\\NewsFeedAndroid\\backend\\BENewsFeed\\BENewsFeed\\Controllers\\ArticlesController.cs*",
+              "RelativeToolTip": "BENewsFeed\\Controllers\\ArticlesController.cs*",
+              "ViewState": "AgIAABYAAAAAAAAAAAAgwCgAAAAyAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-12T02:31:07.252Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "NewsUpdateService.cs",
+              "DocumentMoniker": "C:\\Users\\FPTSHOP\\NewsFeedAndroid\\backend\\BENewsFeed\\BENewsFeed\\Services\\NewsUpdateService.cs",
+              "RelativeDocumentMoniker": "BENewsFeed\\Services\\NewsUpdateService.cs",
+              "ToolTip": "C:\\Users\\FPTSHOP\\NewsFeedAndroid\\backend\\BENewsFeed\\BENewsFeed\\Services\\NewsUpdateService.cs",
+              "RelativeToolTip": "BENewsFeed\\Services\\NewsUpdateService.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAuwCAAAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-12T02:31:02.879Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "RssParseServices.cs",
+              "DocumentMoniker": "C:\\Users\\FPTSHOP\\NewsFeedAndroid\\backend\\BENewsFeed\\BENewsFeed\\Services\\RssParseServices.cs",
+              "RelativeDocumentMoniker": "BENewsFeed\\Services\\RssParseServices.cs",
+              "ToolTip": "C:\\Users\\FPTSHOP\\NewsFeedAndroid\\backend\\BENewsFeed\\BENewsFeed\\Services\\RssParseServices.cs",
+              "RelativeToolTip": "BENewsFeed\\Services\\RssParseServices.cs",
+              "ViewState": "AgIAABAAAAAAAAAAAAAmwBoAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-11T15:03:12.661Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\FPTSHOP\\NewsFeedAndroid\\backend\\BENewsFeed\\BENewsFeed\\Program.cs",
+              "RelativeDocumentMoniker": "BENewsFeed\\Program.cs",
+              "ToolTip": "C:\\Users\\FPTSHOP\\NewsFeedAndroid\\backend\\BENewsFeed\\BENewsFeed\\Program.cs",
+              "RelativeToolTip": "BENewsFeed\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAA3AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-11T08:03:31.793Z",
+              "EditorCaption": ""
             }
           ]
         },

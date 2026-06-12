@@ -24,6 +24,7 @@ import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Newspaper
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.outlined.BookmarkBorder
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Newspaper
@@ -31,6 +32,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -94,7 +96,7 @@ fun HomeScreen(
             Spacer(modifier = Modifier.height(8.dp))
         }
         Spacer(modifier = Modifier.height(8.dp))
-        CategorySection(
+        CategorySection(viewModel,uiState,
             categories = categories,
             onCategorySelected = { viewModel.onCategorySelected(it) }
         )
@@ -118,11 +120,6 @@ fun HomeHeader(){
         style = MaterialTheme.typography.headlineMedium.copy(
             fontWeight = FontWeight.Bold
         )
-    )
-    Text(
-        text = "Tin tức mới nhất hôm nay",
-        style = MaterialTheme.typography.bodyMedium,
-        color = MaterialTheme.colorScheme.onSurfaceVariant
     )
 }
 
@@ -157,17 +154,29 @@ fun SourceSection(
 //Chuyên mục
 @Composable
 fun CategorySection(
+    viewModel: HomeViewModel = viewModel(),
+    uiState: HomeUiState,
     categories : List<Pair<String, String?>>,
     onCategorySelected: (String?) -> Unit,
     selectedCategory: String? = null
 ){
+
     Column {
-        Text(
-            text = "Chuyên mục",
-            style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Chuyên mục",
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            RefreshIcon(viewModel, uiState)
+        }
         LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             items(categories) { (name, slug) ->
                 FilterChip(
@@ -338,4 +347,24 @@ fun ArticleCard(
             }
         }
     }
+
+@Composable
+fun RefreshIcon(viewModel: HomeViewModel, uiState: HomeUiState){
+    IconButton(
+        onClick = { viewModel.refreshNews() },
+        enabled = !uiState.isRefreshing
+    ) {
+        if (uiState.isRefreshing) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(20.dp),
+                strokeWidth = 2.dp
+            )
+        } else {
+            Icon(
+                Icons.Default.Refresh,
+                contentDescription = "Cập nhật"
+            )
+        }
+    }
+}
 
