@@ -68,7 +68,27 @@ class HomeViewModel() : ViewModel(){
         loadArticles()
     }
 
-    fun refresh() = loadArticles(isRefresh = true)
+    // Thêm vào HomeViewModel
+    fun refreshNews() {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isRefreshing = true)
+
+            //.NET fetch RSS mới
+            repository.refreshFromServer()
+
+            //lấy lại danh sách mới nhất
+            val result = repository.getArticles(
+                category = _uiState.value.selectedCategory,
+                sourceId = _uiState.value.selectedSourceId
+            )
+
+            _uiState.value = _uiState.value.copy(
+                articles     = result.getOrElse { _uiState.value.articles },
+                isRefreshing = false,
+                error        = result.exceptionOrNull()?.message
+            )
+        }
+    }
 
 
 

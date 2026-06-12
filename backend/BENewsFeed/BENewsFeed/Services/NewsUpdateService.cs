@@ -8,7 +8,7 @@
         {
             _service = service;
         }
-
+        // Chạy khi ứng dụng khởi động, gọi hàm FetchNewsAsync để lấy tin tức lần đầu tiên, sau đó thiết lập một timer để tự động cập nhật tin tức mỗi 6 giờ
         protected override async Task ExecuteAsync(CancellationToken cl)
         {
             await FetchNewsAsync();

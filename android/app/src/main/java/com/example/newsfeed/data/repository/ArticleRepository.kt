@@ -18,12 +18,10 @@ class ArticleRepository(
     suspend fun getArticles(
         category: String? = null,
         sourceId: Int? = null,
-        page: Int = 1
     ): Result<List<ArticleDto>> = try {
         val articles = apiService.getArticles(
             category = category,
-            sourceId = sourceId,
-            page     = page
+            sourceId = sourceId
         )
         Result.success(articles)
     } catch (e: Exception) {
@@ -39,6 +37,14 @@ class ArticleRepository(
     // Danh sách nguồn báo
     suspend fun getSources(): Result<List<SourceDto>> = try {
         Result.success(apiService.getSources())
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
+
+    //Refresh báo
+    suspend fun refreshFromServer(): Result<Unit> = try {
+        apiService.refreshArticles()   // .NET fetch RSS mới
+        Result.success(Unit)
     } catch (e: Exception) {
         Result.failure(e)
     }

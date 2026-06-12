@@ -15,19 +15,24 @@ namespace BENewsFeed.Services
             _context = context;
         }
 
+        //Lấy danh sách các nguồn báo đang hoạt động, sau đó gọi hàm FetchSourceAsync để đọc RSS và lưu bài viết
         public async Task FetchAllSoucesAsync()
         {
             try
             {
                 var sources = await _context.Sources.Where(s => s.IsActive == true).ToListAsync();
+                foreach (var source in sources)
+                {
+                    await FetchSourceAsync(source);
+                }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error fetching sources: {ex.Message}");
             }
         }
-
-        private async Task FetchSourceAsync(Source source)
+        //Đọc RSS từ một nguồn, trích xuất thông tin bài viết và lưu vào database
+        public async Task FetchSourceAsync(Source source)
         {
             using var reader = new System.Xml.XmlTextReader(source.RssUrl);
 
@@ -56,6 +61,7 @@ namespace BENewsFeed.Services
                 };
 
                 _context.Articles.Add(article);
+                await _context.SaveChangesAsync();
             }
         }
 
