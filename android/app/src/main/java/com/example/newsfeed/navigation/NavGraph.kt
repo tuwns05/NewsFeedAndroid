@@ -33,11 +33,19 @@ fun NavGraph(navController: NavHostController) {
             })
 
         }
-        composable(Routes.HOME){
+        composable(Routes.HOME) {
             MainScreen(
                 onArticleClick = { article ->
-                    // Khi nhấn vào bài báo, chuyển sang màn hình chi tiết
+                    // Khi nhấn vào bài báo
+                },
+                onLogout = {
+                    repo.logout()
 
+                    navController.navigate(Routes.LOGIN) {
+                        popUpTo(Routes.HOME) {
+                            inclusive = true
+                        }
+                    }
                 }
             )
         }
