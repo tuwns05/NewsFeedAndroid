@@ -20,6 +20,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.newsfeed.data.repository.AuthRepository
 import kotlinx.coroutines.launch
+import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.ui.graphics.Color
 
 @Composable
 fun LoginScreen(
@@ -35,25 +39,55 @@ fun LoginScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(20.dp),
+            .padding(horizontal = 32.dp),
         verticalArrangement = Arrangement.Center
     ) {
+
+        Text(
+            text = if (isRegister) "Tạo tài khoản" else "Xin chào!",
+            fontSize = 30.sp
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Text(
+            text = if (isRegister)
+                "Đăng ký để tiếp tục"
+            else
+                "Đăng nhập vào tài khoản của bạn",
+            fontSize = 16.sp
+        )
+
+        Spacer(modifier = Modifier.height(32.dp))
 
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text("Email") }
+            label = { Text("Email") },
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true,
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedTextColor = Color.Black,
+                unfocusedTextColor = Color.Black
+            )
         )
 
-        Spacer(Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Password") }
+            label = { Text("Mật khẩu") },
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true,
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedTextColor = Color.Black,
+                unfocusedTextColor = Color.Black
+            )
+
         )
 
-        Spacer(Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
         Button(
             onClick = {
@@ -68,7 +102,8 @@ fun LoginScreen(
                         onSuccess()
                     }
                 }
-            }
+            },
+            modifier = Modifier.fillMaxWidth()
         ) {
             Text(
                 if (isRegister)
@@ -78,16 +113,19 @@ fun LoginScreen(
             )
         }
 
+        Spacer(modifier = Modifier.height(8.dp))
+
         TextButton(
             onClick = {
                 isRegister = !isRegister
-            }
+            },
+            modifier = Modifier.fillMaxWidth()
         ) {
             Text(
                 if (isRegister)
-                    "Đã có tài khoản?"
+                    "Đã có tài khoản? Đăng nhập"
                 else
-                    "Chưa có tài khoản?"
+                    "Chưa có tài khoản? Đăng ký"
             )
         }
     }

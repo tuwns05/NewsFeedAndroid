@@ -19,26 +19,34 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Article
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Article
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Newspaper
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.BookmarkBorder
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Newspaper
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -83,28 +91,41 @@ data class BottomNavItem(
 
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel = viewModel()
-            ,onArticleClick: (ArticleDto) -> Unit
+    viewModel: HomeViewModel = viewModel(),
+    onArticleClick: (ArticleDto) -> Unit,
+    onLogout: () -> Unit
 ){
     val uiState by viewModel.uiState.collectAsState()
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = Modifier.fillMaxSize()
     ) {
-        Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+        Column(
+            modifier = Modifier.padding(horizontal = 16.dp)
+        ) {
             Spacer(modifier = Modifier.height(8.dp))
+
+            HomeHeader(
+                onLogout = onLogout
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
         }
-        Spacer(modifier = Modifier.height(8.dp))
-        CategorySection(viewModel,uiState,
+
+        CategorySection(
+            viewModel,
+            uiState,
             categories = categories,
-            onCategorySelected = { viewModel.onCategorySelected(it) }
+            onCategorySelected = {
+                viewModel.onCategorySelected(it)
+            }
         )
-        // THÊM: divider ngăn cách filter và danh sách bài báo
+
         HorizontalDivider(
             thickness = 1.dp,
             color = MaterialTheme.colorScheme.outlineVariant
         )
+
         ArticleList(
             uiState = uiState,
             onArticleClick = onArticleClick
@@ -114,13 +135,88 @@ fun HomeScreen(
 
 //Header
 @Composable
-fun HomeHeader(){
-    Text(
-        text = "News Feed",
-        style = MaterialTheme.typography.headlineMedium.copy(
-            fontWeight = FontWeight.Bold
+fun HomeHeader(
+    onLogout: () -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+    var searchText by remember { mutableStateOf("") }
+
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            Column {
+                Text(
+                    text = "News Feed",
+                    style = MaterialTheme.typography.headlineMedium.copy(
+                        fontWeight = FontWeight.Bold
+                    )
+                )
+
+                Text(
+                    text = "Tin tức mới nhất hôm nay",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+
+            Box {
+                IconButton(
+                    onClick = {
+                        expanded = true
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.AccountCircle,
+                        contentDescription = "Tài khoản"
+                    )
+                }
+
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = {
+                        expanded = false
+                    }
+                ) {
+                    DropdownMenuItem(
+                        text = {
+                            Text("Đăng xuất")
+                        },
+                        onClick = {
+                            expanded = false
+                            onLogout()
+                        }
+                    )
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        OutlinedTextField(
+            value = searchText,
+            onValueChange = {
+                searchText = it
+            },
+            modifier = Modifier.fillMaxWidth(),
+            placeholder = {
+                Text("Tìm kiếm tin tức...")
+            },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = null
+                )
+            },
+            singleLine = true
         )
-    )
+    }
 }
 
 //Nguồn báo

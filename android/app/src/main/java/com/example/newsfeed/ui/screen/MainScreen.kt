@@ -48,26 +48,22 @@ private val bottomNavItems = listOf(
     BottomNavItem("Báo chí",   Icons.Filled.Newspaper, Icons.Outlined.Newspaper)
 )
 @Composable
-fun MainScreen(  viewModel: HomeViewModel = viewModel(), onArticleClick: (ArticleDto) -> Unit) {
+fun MainScreen(
+    viewModel: HomeViewModel = viewModel(),
+    onArticleClick: (ArticleDto) -> Unit,
+    onLogout: () -> Unit
+) {
     var selectedTab by remember { mutableStateOf(0) }
     val uiState by viewModel.uiState.collectAsState()
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        Row(modifier = Modifier.padding(horizontal = 16.dp)) {
-            Spacer(modifier = Modifier.height(16.dp))
-            HomeHeader()
-        }
-
-        HorizontalDivider(
-            thickness = 1.dp,
-            color = MaterialTheme.colorScheme.outlineVariant
-        )
         Box(modifier = Modifier.weight(1f)) {
             when (selectedTab) {
                 0 -> {
                     HomeScreen(
-                        onArticleClick = onArticleClick
+                        onArticleClick = onArticleClick,
+                        onLogout = onLogout
                     )
                 }
 
