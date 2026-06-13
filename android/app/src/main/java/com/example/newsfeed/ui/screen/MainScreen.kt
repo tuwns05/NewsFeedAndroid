@@ -82,12 +82,11 @@ fun MainScreen(  viewModel: HomeViewModel = viewModel(), onArticleClick: (Articl
                 }
 
                 2 -> {
-                    // Tab Báo chí (tạm)
+                    BaoChiScreen(onArticleClick = onArticleClick)
                     Box(
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text("📰 Báo chí\nĐang phát triển...", textAlign = TextAlign.Center)
                     }
                 }
             }
