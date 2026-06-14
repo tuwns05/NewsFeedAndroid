@@ -15,6 +15,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.newsfeed.data.remote.dto.ArticleDto
 import com.example.newsfeed.data.repository.ArticleRepository
+import com.example.newsfeed.ui.model.BaoChiViewModel
 import com.example.newsfeed.ui.model.HomeUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -36,38 +37,6 @@ data class BaoChiUiState(
     val error: String? = null,
     val selectedSourceId: Int? = null
 )
-
-// --- ViewModel riêng, sử dụng ArticleRepository có sẵn ---
-class BaoChiViewModel : ViewModel() {
-    private val repository = ArticleRepository()
-    private val _uiState = MutableStateFlow(BaoChiUiState())
-    val uiState: StateFlow<BaoChiUiState> = _uiState.asStateFlow()
-
-    init {
-        loadArticlesForSource(null)
-    }
-
-    fun selectSource(sourceId: Int?) {
-        _uiState.value = _uiState.value.copy(selectedSourceId = sourceId)
-        loadArticlesForSource(sourceId)
-    }
-
-    private fun loadArticlesForSource(sourceId: Int?) {
-        viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true, error = null)
-            val result = repository.getArticles(category = null, sourceId = sourceId)
-            _uiState.value = _uiState.value.copy(
-                articles = result.getOrElse { emptyList() },
-                isLoading = false,
-                error = result.exceptionOrNull()?.message
-            )
-        }
-    }
-
-    fun refresh() {
-        loadArticlesForSource(_uiState.value.selectedSourceId)
-    }
-}
 
 // --- Màn hình Báo chí chính, tái sử dụng SourceSection và ArticleList ---
 @Composable
