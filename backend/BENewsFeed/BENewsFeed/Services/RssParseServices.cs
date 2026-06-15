@@ -53,7 +53,7 @@ namespace BENewsFeed.Services
                     SourceId = source.Id,
                     CategoryId = defaultCategoryId,
                     Title = item.Title?.Text ?? "",
-                    Description = item.Summary?.Text ?? "",
+                    Description = CleanHtml(item.Summary?.Text ?? ""),
                     ImageUrl = ExtractImage(item),
                     Link = link,
                     PublishedAt = item.PublishDate.DateTime,
@@ -84,6 +84,17 @@ namespace BENewsFeed.Services
             var enclosure = item.Links.FirstOrDefault(l => l.RelationshipType == "enclosure");
 
             return enclosure?.Uri.ToString() ?? "";
+        }
+
+        //Clean html chỉ lấy text
+        private string CleanHtml(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+                return "";
+
+            return System.Text.RegularExpressions.Regex
+                .Replace(input, "<.*?>", string.Empty)
+                .Trim();
         }
     }
 }
