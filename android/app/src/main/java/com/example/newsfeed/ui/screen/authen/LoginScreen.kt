@@ -4,10 +4,18 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -17,24 +25,26 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.newsfeed.data.repository.AuthRepository
 import kotlinx.coroutines.launch
-import androidx.compose.ui.unit.sp
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.ui.graphics.Color
 
 @Composable
 fun LoginScreen(
-    onSuccess: () -> Unit
+    onSuccess: () -> Unit,
+    onNavigateToSignUp: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
     val repo = remember { AuthRepository() }
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var isRegister by remember { mutableStateOf(false) }
+    var passwordVisible by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -42,21 +52,11 @@ fun LoginScreen(
             .padding(horizontal = 32.dp),
         verticalArrangement = Arrangement.Center
     ) {
-
-        Text(
-            text = if (isRegister) "Tạo tài khoản" else "Xin chào!",
-            fontSize = 30.sp
-        )
+        Text(text = "Xin chào!", fontSize = 30.sp)
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        Text(
-            text = if (isRegister)
-                "Đăng ký để tiếp tục"
-            else
-                "Đăng nhập vào tài khoản của bạn",
-            fontSize = 16.sp
-        )
+        Text(text = "Đăng nhập vào tài khoản của bạn", fontSize = 16.sp)
 
         Spacer(modifier = Modifier.height(32.dp))
 
@@ -78,13 +78,20 @@ fun LoginScreen(
             value = password,
             onValueChange = { password = it },
             label = { Text("Mật khẩu") },
-            modifier = Modifier.fillMaxWidth(),
+            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             singleLine = true,
+            trailingIcon = {
+                val icon = if (passwordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff
+                IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                    Icon(imageVector = icon, contentDescription = null)
+                }
+            },
             colors = OutlinedTextFieldDefaults.colors(
                 focusedTextColor = Color.Black,
                 unfocusedTextColor = Color.Black
-            )
-
+            ),
+            modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -92,41 +99,22 @@ fun LoginScreen(
         Button(
             onClick = {
                 scope.launch {
-                    val success =
-                        if (isRegister)
-                            repo.register(email, password)
-                        else
-                            repo.login(email, password)
-
-                    if (success) {
-                        onSuccess()
-                    }
+                    val success = repo.login(email, password)
+                    if (success) onSuccess()
                 }
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(
-                if (isRegister)
-                    "Đăng ký"
-                else
-                    "Đăng nhập"
-            )
+            Text("Đăng nhập")
         }
 
         Spacer(modifier = Modifier.height(8.dp))
 
         TextButton(
-            onClick = {
-                isRegister = !isRegister
-            },
+            onClick = onNavigateToSignUp,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(
-                if (isRegister)
-                    "Đã có tài khoản? Đăng nhập"
-                else
-                    "Chưa có tài khoản? Đăng ký"
-            )
+            Text("Chưa có tài khoản? Đăng ký")
         }
     }
 }

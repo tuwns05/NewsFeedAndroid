@@ -24,6 +24,7 @@ import com.example.newsfeed.ui.screen.DetailScreen
 import com.example.newsfeed.ui.screen.HomeScreen
 import com.example.newsfeed.ui.screen.MainScreen
 import com.example.newsfeed.ui.screen.authen.LoginScreen
+import com.example.newsfeed.ui.screen.authen.SignUpScreen
 
 @SuppressLint("ViewModelConstructorInComposable")
 @Composable
@@ -40,15 +41,34 @@ fun NavGraph(navController: NavHostController) {
         navController = navController,
         startDestination = startDestination
     ){
-        composable(Routes.LOGIN){
-            LoginScreen (onSuccess = {
-                navController.navigate(Routes.HOME){
-                    popUpTo(Routes.LOGIN){
-                        inclusive = true
+        composable(Routes.LOGIN) {
+            LoginScreen(
+                onSuccess = {
+                    navController.navigate(Routes.HOME) {
+                        popUpTo(Routes.LOGIN) {
+                            inclusive = true
+                        }
                     }
+                },
+                onNavigateToSignUp = {
+                    navController.navigate(Routes.SIGNUP)
                 }
-            })
+            )
+        }
 
+        composable(Routes.SIGNUP) {
+            SignUpScreen(
+                onSuccess = {
+                    navController.navigate(Routes.HOME) {
+                        popUpTo(Routes.LOGIN) {
+                            inclusive = true
+                        }
+                    }
+                },
+                onNavigateToLogin = {
+                    navController.popBackStack()
+                }
+            )
         }
         composable(Routes.HOME) {
             MainScreen(
