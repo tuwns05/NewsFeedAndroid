@@ -7,10 +7,8 @@ data class ArticleDto (
     val id: Int,
     val title: String,
     val description: String,
-
     @SerializedName("imageUrl")
-    val imageUrl: String,
-
+    val imageUrl: String?,
     val link: String,
     val publishedAt: String,
     val sourceName: String,
