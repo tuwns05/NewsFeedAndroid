@@ -107,6 +107,11 @@ class HomeViewModel() : ViewModel(){
         }
     }
 
+    //Search
+   fun search(query: String){
+
+   }
+
 
 
 

@@ -3,6 +3,7 @@ using BENewsFeed.Models;
 using BENewsFeed.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 
 namespace BENewsFeed.Controllers
 {
@@ -108,5 +109,40 @@ namespace BENewsFeed.Controllers
                 });
             }
         }
-    }
+
+        //Search đầu vào là 1 chuỗi string trả về danh sách bài viết có tiêu đề chứa string đó
+        [HttpGet("search")]
+        public async Task<IActionResult> Search([FromQuery] String key)
+        {
+            if(String.IsNullOrEmpty(key))
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "Vui lòng cung cấp từ khóa tìm kiếm."
+                });
+            }
+            var articles = await _context.Articles
+            .Include(a => a.Source)
+             .Include(a => a.Category)
+             .Where(a => a.Title.Contains(key))
+             .OrderByDescending(a => a.PublishedAt)
+             .Select(a => new ArticleDto
+             {
+                 Id = a.Id,
+                 Title = a.Title,
+                 Description = a.Description ?? "",
+                 ImageUrl = a.ImageUrl ?? "",
+                 Link = a.Link,
+                 PublishedAt = a.PublishedAt.HasValue
+                     ? a.PublishedAt.Value.ToString("dd/MM/yyyy HH:mm")
+                     : "",
+                 SourceName = a.Source.Name,
+                 Category = a.Category.Name
+             })
+             .ToListAsync();
+            // Return Ok là trả về kết quả tìm kiếm dưới dạng JSON
+                 return Ok(articles);
+                }
+            }
 }
