@@ -8,6 +8,7 @@ import com.example.newsfeed.data.repository.AuthRepository
 import com.example.newsfeed.ui.screen.HomeScreen
 import com.example.newsfeed.ui.screen.MainScreen
 import com.example.newsfeed.ui.screen.authen.LoginScreen
+import com.example.newsfeed.ui.screen.authen.SignUpScreen
 
 @Composable
 fun NavGraph(navController: NavHostController) {
@@ -23,15 +24,34 @@ fun NavGraph(navController: NavHostController) {
         navController = navController,
         startDestination = startDestination
     ){
-        composable(Routes.LOGIN){
-            LoginScreen (onSuccess = {
-                navController.navigate(Routes.HOME){
-                    popUpTo(Routes.LOGIN){
-                        inclusive = true
+        composable(Routes.LOGIN) {
+            LoginScreen(
+                onSuccess = {
+                    navController.navigate(Routes.HOME) {
+                        popUpTo(Routes.LOGIN) {
+                            inclusive = true
+                        }
                     }
+                },
+                onNavigateToSignUp = {
+                    navController.navigate(Routes.SIGNUP)
                 }
-            })
+            )
+        }
 
+        composable(Routes.SIGNUP) {
+            SignUpScreen(
+                onSuccess = {
+                    navController.navigate(Routes.HOME) {
+                        popUpTo(Routes.LOGIN) {
+                            inclusive = true
+                        }
+                    }
+                },
+                onNavigateToLogin = {
+                    navController.popBackStack()
+                }
+            )
         }
         composable(Routes.HOME) {
             MainScreen(
