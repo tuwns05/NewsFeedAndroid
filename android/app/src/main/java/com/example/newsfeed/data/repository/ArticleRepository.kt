@@ -57,5 +57,10 @@ class ArticleRepository(
         Result.failure(e)
     }
 
+    //Search
+    suspend fun search(query: String): Result<List<ArticleDto>> {
+
+    }
+
 
 }
