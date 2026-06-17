@@ -47,6 +47,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "BENewsFeed.Controllers.ArticlesController",
+    "Method": "Search",
+    "RelativePath": "api/Articles/search",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "key",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "BENewsFeed.Controllers.CategoriesController",
     "Method": "GetAll",
     "RelativePath": "api/Categories",
