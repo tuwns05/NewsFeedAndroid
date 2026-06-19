@@ -116,7 +116,10 @@ fun HomeScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             HomeHeader(
-                onLogout = onLogout
+                onLogout = onLogout,
+                onSearch = {
+                    viewModel.searchArticles(it)
+                }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -146,7 +149,8 @@ fun HomeScreen(
 //Header
 @Composable
 fun HomeHeader(
-    onLogout: () -> Unit
+    onLogout: () -> Unit,
+    onSearch: (String) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
     var searchText by remember { mutableStateOf("") }
@@ -227,7 +231,10 @@ fun HomeHeader(
             Spacer(modifier = Modifier.width(8.dp))
             BasicTextField(
                 value = searchText,
-                onValueChange = { searchText = it },
+                onValueChange = {
+                    searchText = it
+                    onSearch(it)
+                },
                 textStyle = androidx.compose.ui.text.TextStyle(fontSize = 13.sp, color = Color.Black),
                 singleLine = true,
                 modifier = Modifier.weight(1f),

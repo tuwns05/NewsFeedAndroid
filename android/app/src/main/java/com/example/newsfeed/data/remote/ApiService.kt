@@ -24,6 +24,10 @@ interface ApiService {
     ): ArticleDto
 
     //Tìm kiếm bài viết
+    @GET("api/articles/search")
+    suspend fun findArticle(
+        @Query("query") query: String
+    ): List<ArticleDto>
 
     // Danh sách chuyên mục
     // GET /api/categories

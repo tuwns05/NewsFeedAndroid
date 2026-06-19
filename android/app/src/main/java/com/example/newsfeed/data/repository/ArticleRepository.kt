@@ -56,6 +56,12 @@ class ArticleRepository(
     } catch (e: Exception) {
         Result.failure(e)
     }
-
-
+    //Search
+    suspend fun searchArticles(
+        query: String
+    ): Result<List<ArticleDto>> = try {
+        Result.success(apiService.findArticle(query))
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
 }

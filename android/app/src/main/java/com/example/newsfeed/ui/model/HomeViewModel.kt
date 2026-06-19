@@ -106,7 +106,29 @@ class HomeViewModel() : ViewModel(){
             null
         }
     }
+    //Search
+    fun searchArticles(query: String) {
+        viewModelScope.launch {
 
+            if (query.isBlank()) {
+                loadArticles()
+                return@launch
+            }
+
+            _uiState.value = _uiState.value.copy(
+                isLoading = true,
+                error = null
+            )
+
+            val result = repository.searchArticles(query)
+
+            _uiState.value = _uiState.value.copy(
+                articles = result.getOrElse { emptyList() },
+                isLoading = false,
+                error = result.exceptionOrNull()?.message
+            )
+        }
+    }
 
 
 
