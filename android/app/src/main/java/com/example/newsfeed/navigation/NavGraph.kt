@@ -1,14 +1,32 @@
 package com.example.newsfeed.navigation
 
+import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import com.example.newsfeed.data.remote.dto.ArticleDto
 import com.example.newsfeed.data.repository.AuthRepository
+import com.example.newsfeed.ui.model.HomeViewModel
+import com.example.newsfeed.ui.screen.DetailScreen
 import com.example.newsfeed.ui.screen.HomeScreen
 import com.example.newsfeed.ui.screen.MainScreen
 import com.example.newsfeed.ui.screen.authen.LoginScreen
+import com.example.newsfeed.ui.screen.authen.SignUpScreen
 
+@SuppressLint("ViewModelConstructorInComposable")
 @Composable
 fun NavGraph(navController: NavHostController) {
     val repo = AuthRepository()
@@ -23,25 +41,90 @@ fun NavGraph(navController: NavHostController) {
         navController = navController,
         startDestination = startDestination
     ){
-        composable(Routes.LOGIN){
-            LoginScreen (onSuccess = {
-                navController.navigate(Routes.HOME){
-                    popUpTo(Routes.LOGIN){
-                        inclusive = true
+        composable(Routes.LOGIN) {
+            LoginScreen(
+                onSuccess = {
+                    navController.navigate(Routes.HOME) {
+                        popUpTo(Routes.LOGIN) {
+                            inclusive = true
+                        }
                     }
-                }
-            })
-
-        }
-        composable(Routes.HOME){
-            MainScreen(
-                onArticleClick = { article ->
-                    // Khi nhấn vào bài báo, chuyển sang màn hình chi tiết
-
+                },
+                onNavigateToSignUp = {
+                    navController.navigate(Routes.SIGNUP)
                 }
             )
         }
 
+        composable(Routes.SIGNUP) {
+            SignUpScreen(
+                onSuccess = {
+                    navController.navigate(Routes.HOME) {
+                        popUpTo(Routes.LOGIN) {
+                            inclusive = true
+                        }
+                    }
+                },
+                onNavigateToLogin = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        composable(Routes.HOME) {
+            MainScreen(
+                onArticleClick = { article ->
+                    navController.navigate(Routes.getDetailRoute(article.id))
+                },
+                onLogout = {
+                    repo.logout()
 
-    }
+                    navController.navigate(Routes.LOGIN) {
+                        popUpTo(Routes.HOME) {
+                            inclusive = true
+                        }
+                    }
+                }
+            )
+        }
+
+            // Màn hình detail với argument (Int)
+        composable(
+                route = Routes.DETAIL,
+                arguments = listOf(
+                    navArgument("articleId") {
+                        type = NavType.IntType  // Chuyển sang IntType
+                    }
+                )
+            ) { backStackEntry ->
+                val articleId = backStackEntry.arguments?.getInt("articleId")
+                var article by remember { mutableStateOf<ArticleDto?>(null) }
+                var isLoading by remember { mutableStateOf(true) }
+                val homeViewModel = HomeViewModel()
+                // Load article khi có ID
+                LaunchedEffect(articleId) {
+                    if (articleId != null) {
+                        isLoading = true
+                        article = homeViewModel.getArticleById(articleId)
+                        isLoading = false
+                    }
+                }
+
+                if (isLoading) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                } else {
+                    DetailScreen(
+                        article = article,
+                        onBack = { navController.popBackStack() }
+                    )
+                }
+            }
+        }
 }
+
+
+

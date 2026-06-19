@@ -68,7 +68,7 @@ class HomeViewModel() : ViewModel(){
         loadArticles()
     }
 
-    // Thêm vào HomeViewModel
+    //Refresh cập nhật lại tin tức
     fun refreshNews() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isRefreshing = true)
@@ -90,6 +90,45 @@ class HomeViewModel() : ViewModel(){
         }
     }
 
+    //Lấy chi tiết bài báo theo id
+    suspend fun getArticleById(articleId: Int): ArticleDto? {
+        return try {
+            //tìm trong danh sách hiện tại trước
+            val existingArticle = _uiState.value.articles.find { it.id == articleId }
+            if (existingArticle != null) {
+                return existingArticle
+            }
+
+            // Nếu không có, gọi API lấy chi tiết
+            val result = repository.getArticleById(articleId)
+            result.getOrNull()
+        } catch (e: Exception) {
+            null
+        }
+    }
+    //Search
+    fun searchArticles(query: String) {
+        viewModelScope.launch {
+
+            if (query.isBlank()) {
+                loadArticles()
+                return@launch
+            }
+
+            _uiState.value = _uiState.value.copy(
+                isLoading = true,
+                error = null
+            )
+
+            val result = repository.searchArticles(query)
+
+            _uiState.value = _uiState.value.copy(
+                articles = result.getOrElse { emptyList() },
+                isLoading = false,
+                error = result.exceptionOrNull()?.message
+            )
+        }
+    }
 
 
 

@@ -9,11 +9,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class SavedRepository( private val savedArticleDao: SavedArticleDao){
-    // Lấy danh sách bookmark dạng ArticleDto — dùng cho SavedScreen
-    fun getSavedArticles(): Flow<List<ArticleDto>> =
-        savedArticleDao.getAll().map { list ->
-            list.map { it.toArticleDto() }
-        }
 
     // Lưu bookmark
     suspend fun save(article: ArticleDto) =

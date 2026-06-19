@@ -1,8 +1,10 @@
 package com.example.newsfeed.ui.screen
 
 
+import android.util.Log
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,42 +15,58 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Article
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Article
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Newspaper
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.BookmarkBorder
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Newspaper
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil3.compose.AsyncImage
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 import com.example.newsfeed.data.remote.dto.ArticleDto
 import com.example.newsfeed.ui.model.HomeUiState
 import com.example.newsfeed.ui.model.HomeViewModel
@@ -83,28 +101,44 @@ data class BottomNavItem(
 
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel = viewModel()
-            ,onArticleClick: (ArticleDto) -> Unit
+    viewModel: HomeViewModel = viewModel(),
+    onArticleClick: (ArticleDto) -> Unit,
+    onLogout: () -> Unit
 ){
     val uiState by viewModel.uiState.collectAsState()
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = Modifier.fillMaxSize()
     ) {
-        Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+        Column(
+            modifier = Modifier.padding(horizontal = 16.dp)
+        ) {
             Spacer(modifier = Modifier.height(8.dp))
+
+            HomeHeader(
+                onLogout = onLogout,
+                onSearch = {
+                    viewModel.searchArticles(it)
+                }
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
         }
-        Spacer(modifier = Modifier.height(8.dp))
-        CategorySection(viewModel,uiState,
+
+        CategorySection(
+            viewModel,
+            uiState,
             categories = categories,
-            onCategorySelected = { viewModel.onCategorySelected(it) }
+            onCategorySelected = {
+                viewModel.onCategorySelected(it)
+            }
         )
-        // THÊM: divider ngăn cách filter và danh sách bài báo
+
         HorizontalDivider(
             thickness = 1.dp,
             color = MaterialTheme.colorScheme.outlineVariant
         )
+
         ArticleList(
             uiState = uiState,
             onArticleClick = onArticleClick
@@ -114,13 +148,105 @@ fun HomeScreen(
 
 //Header
 @Composable
-fun HomeHeader(){
-    Text(
-        text = "News Feed",
-        style = MaterialTheme.typography.headlineMedium.copy(
-            fontWeight = FontWeight.Bold
-        )
-    )
+fun HomeHeader(
+    onLogout: () -> Unit,
+    onSearch: (String) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+    var searchText by remember { mutableStateOf("") }
+
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            Column {
+                Text(
+                    text = "News Feed",
+                    style = MaterialTheme.typography.headlineMedium.copy(
+                        fontWeight = FontWeight.Bold
+                    )
+                )
+
+                Text(
+                    text = "Tin tức mới nhất hôm nay",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+
+            Box {
+                IconButton(
+                    onClick = {
+                        expanded = true
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.AccountCircle,
+                        contentDescription = "Tài khoản"
+                    )
+                }
+
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = {
+                        expanded = false
+                    }
+                ) {
+                    DropdownMenuItem(
+                        text = {
+                            Text("Đăng xuất")
+                        },
+                        onClick = {
+                            expanded = false
+                            onLogout()
+                        }
+                    )
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(0.85f)
+                .height(40.dp)
+                .align(Alignment.CenterHorizontally)
+                .border(1.dp, Color.LightGray, RoundedCornerShape(20.dp))
+                .padding(horizontal = 12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = Icons.Default.Search,
+                contentDescription = null,
+                tint = Color.Gray,
+                modifier = Modifier.size(18.dp)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            BasicTextField(
+                value = searchText,
+                onValueChange = {
+                    searchText = it
+                    onSearch(it)
+                },
+                textStyle = androidx.compose.ui.text.TextStyle(fontSize = 13.sp, color = Color.Black),
+                singleLine = true,
+                modifier = Modifier.weight(1f),
+                decorationBox = { innerTextField ->
+                    if (searchText.isEmpty()) {
+                        Text("Tìm kiếm tin tức...", fontSize = 13.sp, color = Color.Gray)
+                    }
+                    innerTextField()
+                }
+            )
+        }
+    }
 }
 
 //Nguồn báo
@@ -277,27 +403,34 @@ fun ArticleCard(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
 
-                Text(
-                    text = article.category,
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
             }
-            // THÊM: thumbnail placeholder bên phải
-            // Khi có ảnh thật: thay Box này bằng AsyncImage(model = article.imageUrl) từ Coil
-            Box(
-                modifier = Modifier
-                    .size(width = 80.dp, height = 80.dp)
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(MaterialTheme.colorScheme.secondaryContainer),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.Article,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.4f),
-                    modifier = Modifier.size(28.dp)
+
+            //parse ảnh
+            if (!article.imageUrl.isNullOrBlank()) {
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(article.imageUrl)
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = article.title,
+                    modifier = Modifier
+                        .size(80.dp)
+                        .clip(RoundedCornerShape(8.dp)),
+                    contentScale = ContentScale.Crop,
                 )
+            } else {
+                Box(
+                    modifier = Modifier
+                        .size(80.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(MaterialTheme.colorScheme.secondaryContainer),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.Article,
+                        contentDescription = null
+                    )
+                }
             }
         }
     }

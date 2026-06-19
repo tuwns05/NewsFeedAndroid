@@ -34,6 +34,14 @@ class ArticleRepository(
         Result.failure(e)
     }
 
+    // Lấy chi tiết bài báo theo ID
+    suspend fun getArticleById(articleId: Int): Result<ArticleDto> = try {
+        val article = apiService.getArticleById(articleId)
+        Result.success(article)
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
+
     // Danh sách nguồn báo
     suspend fun getSources(): Result<List<SourceDto>> = try {
         Result.success(apiService.getSources())
@@ -48,6 +56,12 @@ class ArticleRepository(
     } catch (e: Exception) {
         Result.failure(e)
     }
-
-
+    //Search
+    suspend fun searchArticles(
+        query: String
+    ): Result<List<ArticleDto>> = try {
+        Result.success(apiService.findArticle(query))
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
 }

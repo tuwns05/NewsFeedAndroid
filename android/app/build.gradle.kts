@@ -58,6 +58,7 @@ dependencies {
     implementation("androidx.room:room-ktx:2.6.1")
     implementation(libs.androidx.compose.runtime.livedata)
     implementation("androidx.navigation:navigation-compose:2.9.0")
+    implementation(libs.androidx.ui)
     ksp("androidx.room:room-compiler:2.6.1")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
 
@@ -80,4 +81,11 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("androidx.compose.material:material-icons-extended:1.7.4")
     implementation("com.google.firebase:firebase-auth")
+
+    //Jsoup
+    implementation("org.jsoup:jsoup:1.17.2")
+
+    //Coil sử lý ảnh
+    implementation("io.coil-kt.coil3:coil-compose:3.0.4")
+    implementation("io.coil-kt.coil3:coil-network-okhttp:3.0.4")
 }
