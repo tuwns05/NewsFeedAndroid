@@ -1,6 +1,7 @@
 package com.example.newsfeed.ui.screen
 
-import android.util.Log
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -41,6 +42,7 @@ fun DetailScreen(
     onBack: () -> Unit,
     viewModel: DetailViewModel = viewModel()
 ) {
+    val context = LocalContext.current
 
     // Kiểm tra article null
     if (article == null) {
@@ -117,7 +119,15 @@ fun DetailScreen(
                     }
                     //nút share
                     IconButton(
-                        onClick = { /* Handle share button click */ }
+                        onClick = {
+                            val sendIntent = Intent().apply {
+                                action = Intent.ACTION_SEND
+                                putExtra(Intent.EXTRA_TEXT, "${article.title}\n\n${article.link}")
+                                type = "text/plain"
+                            }
+                            val shareIntent = Intent.createChooser(sendIntent, "Chia sẻ bài viết qua:")
+                            context.startActivity(shareIntent)
+                        }
                     ) {
                         Icon(
                             imageVector = Icons.Default.Share,
@@ -126,7 +136,14 @@ fun DetailScreen(
                     }
                     //nút mở bài báo qua link gốc
                     IconButton(
-                        onClick = { /* Handle open in browser button click */ }
+                        onClick = {
+                            try {
+                                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(article.link))
+                                context.startActivity(browserIntent)
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
+                        }
                     ) {
                         Icon(
                             imageVector = Icons.Default.OpenInNew,
