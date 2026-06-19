@@ -1,5 +1,6 @@
 package com.example.newsfeed.data.repository
 
+import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.tasks.await
 
@@ -20,6 +21,7 @@ class AuthRepository {
             auth.createUserWithEmailAndPassword(email, password).await()
             true
         } catch (e: Exception) {
+            Log.e("REGISTER", "Register failed", e)
             false
         }
     }

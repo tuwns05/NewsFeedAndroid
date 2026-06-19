@@ -45,6 +45,7 @@ fun LoginScreen(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -99,13 +100,24 @@ fun LoginScreen(
         Button(
             onClick = {
                 scope.launch {
+                    errorMessage=""
                     val success = repo.login(email, password)
                     if (success) onSuccess()
+                    else{
+                        errorMessage = "Đăng nhập thất bại"
+                    }
                 }
             },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Đăng nhập")
+        }
+        if (errorMessage.isNotEmpty()) {
+            Text(
+                text = errorMessage,
+                color = Color.Red,
+                modifier = Modifier.padding(vertical = 8.dp)
+            )
         }
 
         Spacer(modifier = Modifier.height(8.dp))
