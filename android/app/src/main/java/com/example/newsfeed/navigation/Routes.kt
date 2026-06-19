@@ -7,5 +7,9 @@ object Routes {
 
     const val DETAIL = "detail/{articleId}"
 
+    const val DETAIL_OFFLINE = "detail_offline/{articleId}"
+    const val SAVED = "saved"
+
     fun getDetailRoute(articleId: Int) = "detail/$articleId"
+    fun getDetailOfflineRoute(articleId: Int) = "detail_offline/$articleId"
 }

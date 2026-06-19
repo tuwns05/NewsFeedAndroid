@@ -1,7 +1,9 @@
 package com.example.newsfeed.ui.screen
 
+import android.R.attr.content
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -10,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Article
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material.icons.filled.OpenInNew
 import androidx.compose.material.icons.filled.Share
@@ -40,9 +43,18 @@ import java.io.Console
 fun DetailScreen(
     article: ArticleDto?,
     onBack: () -> Unit,
+    offlineContent: String? = null,
     viewModel: DetailViewModel = viewModel()
 ) {
     val context = LocalContext.current
+
+    val isSaved by viewModel._isSaved.collectAsStateWithLifecycle()
+
+    val content by viewModel.content.collectAsStateWithLifecycle()
+
+    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
+
+    val displayContent = offlineContent ?: content
 
     // Kiểm tra article null
     if (article == null) {
@@ -53,10 +65,20 @@ fun DetailScreen(
             Text("Không có dữ liệu bài báo")
         }
         return
-    }  // Gọi cào nội dung khi article.url thay đổi
-    LaunchedEffect(article.link) {
-        viewModel.loadArticleContent(article.link)
     }
+    // Gọi cào nội dung khi article.url thay đổi
+    LaunchedEffect(article.link) {
+        // Chỉ fetch mạng nếu không có offline content
+        if (offlineContent == null) {
+            viewModel.loadArticleContent(article.link)
+        }
+    }
+
+    // Observe trạng thái bookmark
+    LaunchedEffect(article.id) {
+        viewModel.observeSavedState(article.id)
+    }
+
 
     Scaffold(
         topBar = {
@@ -107,16 +129,23 @@ fun DetailScreen(
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
-                    //nút lưu
+                    //NÚT LƯU
                     IconButton(
-                        onClick = { /* Handle save button click */ }
 
-                    ) {
+                        onClick = {
+                            Log.d("DETAIL", "Content = $content")
+                            println("Content = $content")
+                            viewModel.toggleSave(article,displayContent?: "Không có nội dung" )
+                        }) {
                         Icon(
-                            imageVector = Icons.Default.BookmarkBorder,
-                            contentDescription = "Lưu bài báo"
-                        )
-                    }
+                            imageVector = if (isSaved) Icons.Default.Bookmark
+                            else Icons.Default.BookmarkBorder,
+                            contentDescription = if (isSaved) "Bỏ lưu" else "Lưu bài báo",
+                            tint = if (isSaved) MaterialTheme.colorScheme.primary
+                            else LocalContentColor.current
+                        )}
+
+
                     //nút share
                     IconButton(
                         onClick = {
@@ -186,8 +215,6 @@ fun DetailScreen(
                     }
                 }
                 Spacer(modifier = Modifier.height(16.dp))
-                val content by viewModel.content.collectAsStateWithLifecycle()
-                val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
                 // Nội dung
                 if (isLoading) {
@@ -199,8 +226,7 @@ fun DetailScreen(
                     }
                 } else {
                     Text(
-
-                        text = content ?: "Không có nội dung",
+                        text = displayContent?: "Không có nội dung",
                         style = MaterialTheme.typography.bodyLarge
                     )
 

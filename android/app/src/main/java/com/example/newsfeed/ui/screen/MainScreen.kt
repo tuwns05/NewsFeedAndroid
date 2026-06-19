@@ -38,6 +38,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.runtime.collectAsState
+import com.example.newsfeed.data.entity.SavedArticle
 import com.example.newsfeed.ui.model.HomeUiState
 
 
@@ -51,6 +52,7 @@ private val bottomNavItems = listOf(
 fun MainScreen(
     viewModel: HomeViewModel = viewModel(),
     onArticleClick: (ArticleDto) -> Unit,
+    onArticleClick2: (SavedArticle) -> Unit,
     onLogout: () -> Unit
 ) {
     var selectedTab by remember { mutableStateOf(0) }
@@ -68,13 +70,10 @@ fun MainScreen(
                 }
 
                 1 -> {
-                    // Tab Đã lưu (tạm)
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text("📌 Đã lưu\nĐang phát triển...", textAlign = TextAlign.Center)
-                    }
+                    SavedScreen(
+                        onArticleClick = onArticleClick2,
+                        onBack = { selectedTab = 0 }
+                    )
                 }
 
                 2 -> {
