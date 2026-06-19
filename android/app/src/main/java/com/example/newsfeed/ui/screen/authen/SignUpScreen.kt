@@ -48,7 +48,7 @@ fun SignUpScreen(
     var confirmPassword by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
     var confirmPasswordVisible by remember { mutableStateOf(false) }
-
+    var errorMessage by remember { mutableStateOf("") }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -129,10 +129,18 @@ fun SignUpScreen(
 
         Button(
             onClick = {
+                errorMessage=""
                 if (password != confirmPassword) return@Button
+                if(password.length<6){
+                    errorMessage = "Mật khẩu phải có ít nhất 6 ký tự"
+                    return@Button
+                }
                 scope.launch {
                     val success = repo.register(email, password)
                     if (success) onSuccess()
+                    else{
+                        errorMessage = "Đăng ký thất bại"
+                    }
                 }
             },
             enabled = email.isNotBlank() && password.isNotBlank() && password == confirmPassword,
@@ -146,6 +154,15 @@ fun SignUpScreen(
         ) {
             Text("Đăng ký")
         }
+
+        if (errorMessage.isNotEmpty()) {
+            Text(
+                text = errorMessage,
+                color = Color.Red,
+                modifier = Modifier.padding(vertical = 8.dp)
+            )
+        }
+
 
         Spacer(modifier = Modifier.height(8.dp))
 
