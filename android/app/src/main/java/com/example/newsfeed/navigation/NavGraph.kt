@@ -12,17 +12,23 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.newsfeed.data.database.AppDatabase
+import com.example.newsfeed.data.entity.SavedArticle
+import com.example.newsfeed.data.entity.toArticleDto
 import com.example.newsfeed.data.remote.dto.ArticleDto
 import com.example.newsfeed.data.repository.AuthRepository
+import com.example.newsfeed.data.repository.SavedRepository
 import com.example.newsfeed.ui.model.HomeViewModel
 import com.example.newsfeed.ui.screen.DetailScreen
 import com.example.newsfeed.ui.screen.HomeScreen
 import com.example.newsfeed.ui.screen.MainScreen
+import com.example.newsfeed.ui.screen.SavedScreen
 import com.example.newsfeed.ui.screen.authen.LoginScreen
 import com.example.newsfeed.ui.screen.authen.SignUpScreen
 
@@ -75,9 +81,11 @@ fun NavGraph(navController: NavHostController) {
                 onArticleClick = { article ->
                     navController.navigate(Routes.getDetailRoute(article.id))
                 },
+                onArticleClick2 = { article ->
+                    navController.navigate(Routes.getDetailOfflineRoute(article.id))
+                },
                 onLogout = {
                     repo.logout()
-
                     navController.navigate(Routes.LOGIN) {
                         popUpTo(Routes.HOME) {
                             inclusive = true
@@ -86,7 +94,47 @@ fun NavGraph(navController: NavHostController) {
                 }
             )
         }
+        // Màn hình saved
+        composable(Routes.SAVED) {
+            SavedScreen(
+                onArticleClick = { article ->
+                    navController.navigate(Routes.getDetailRoute(article.id))
+                },
+                onBack = { navController.popBackStack() }
+            )
+        }
+        // Route offline — lấy từ Room
+        composable(
+            route = Routes.DETAIL_OFFLINE ,
+            arguments = listOf(
+                navArgument("articleId") { type = NavType.IntType }
+            )
+        ) { backStackEntry ->
+            val articleId = backStackEntry.arguments?.getInt("articleId")
+            var savedArticle by remember { mutableStateOf<SavedArticle?>(null) }
+            var isLoading by remember { mutableStateOf(true) }
+            val context = LocalContext.current
 
+            LaunchedEffect(articleId) {
+                if (articleId != null) {
+                    val repository = SavedRepository(context)
+                    savedArticle = repository.getOfflineArticle(articleId)
+                    isLoading = false
+                }
+            }
+
+            if (isLoading) {
+                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
+                }
+            } else {
+                DetailScreen(
+                    article = savedArticle?.toArticleDto(),
+                    offlineContent = savedArticle?.content,
+                    onBack = { navController.popBackStack() }
+                )
+            }
+        }
             // Màn hình detail với argument (Int)
         composable(
                 route = Routes.DETAIL,

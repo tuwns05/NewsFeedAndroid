@@ -59,6 +59,7 @@ dependencies {
     implementation(libs.androidx.compose.runtime.livedata)
     implementation("androidx.navigation:navigation-compose:2.9.0")
     implementation(libs.androidx.ui)
+    implementation(libs.androidx.material3)
     ksp("androidx.room:room-compiler:2.6.1")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
 

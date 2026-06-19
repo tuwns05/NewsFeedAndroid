@@ -16,18 +16,22 @@ data class SavedArticle(
     val sourceName: String,
     val category: String,
     val publishedAt: String,
-    val savedAt: Long = System.currentTimeMillis()
+    val savedAt: Long = System.currentTimeMillis(),
+    val content : String
 )
 
-fun ArticleDto.toSavedArticle() = SavedArticle(
-    id          = id,
-    title       = title,
+fun ArticleDto.toSavedArticle(
+    content: String
+) = SavedArticle(
+    id = id,
+    title = title,
     description = description,
-    imageUrl    = imageUrl,
-    link        = link,
-    sourceName  = sourceName,
-    category    = category,
-    publishedAt = publishedAt
+    imageUrl = imageUrl,
+    link = link,
+    sourceName = sourceName,
+    category = category,
+    publishedAt = publishedAt,
+    content = content
 )
 
 // Chuyển ngược SavedArticle → ArticleDto để dùng lại ArticleCard
