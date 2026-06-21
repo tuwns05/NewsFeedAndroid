@@ -21,10 +21,11 @@ namespace BENewsFeed.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] string? category, [FromQuery] int? sourceId)
+        public async Task<IActionResult> GetAll([FromQuery] string? category, [FromQuery] int? sourceId,
+            [FromQuery] string? timeFilter)
         {
             var query = _context.Articles.Include(a=> a.Source).Include(a => a.Category).AsQueryable();
-
+               
             //Lọc theo chuyên mục
             if (!string.IsNullOrEmpty(category))
             {
@@ -37,8 +38,26 @@ namespace BENewsFeed.Controllers
             {
                 query = query.Where(a => a.SourceId == sourceId.Value);
             }
+            //  Lọc theo thời gian
+            if (!string.IsNullOrEmpty(timeFilter))
+            {
+                var now = DateTime.Now;
+                DateTime? fromDate = timeFilter switch
+                {
+                    "today" => now.Date,
+                    "3days" => now.Date.AddDays(-3),
+                    "7days" => now.Date.AddDays(-7),
+                    "1month" => now.Date.AddMonths(-1),
+                    _ => null
+                };
 
-                var articles = await query
+                if (fromDate.HasValue)
+                {
+                    query = query.Where(a => a.PublishedAt >= fromDate.Value);
+                }
+            }
+
+            var articles = await query
             .OrderByDescending(a => a.PublishedAt)
             .Select(a => new ArticleDto
             {
@@ -112,9 +131,9 @@ namespace BENewsFeed.Controllers
 
         //Search đầu vào là 1 chuỗi string trả về danh sách bài viết có tiêu đề chứa string đó
         [HttpGet("search")]
-        public async Task<IActionResult> Search([FromQuery] String key)
+        public async Task<IActionResult> Search([FromQuery] String query)
         {
-            if(String.IsNullOrEmpty(key))
+            if(String.IsNullOrEmpty(query))
             {
                 return BadRequest(new
                 {
@@ -125,7 +144,7 @@ namespace BENewsFeed.Controllers
             var articles = await _context.Articles
             .Include(a => a.Source)
              .Include(a => a.Category)
-             .Where(a => a.Title.Contains(key))
+             .Where(a => a.Title.Contains(query))
              .OrderByDescending(a => a.PublishedAt)
              .Select(a => new ArticleDto
              {

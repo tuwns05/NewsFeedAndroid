@@ -35,7 +35,7 @@ import com.example.newsfeed.ui.screen.authen.SignUpScreen
 @SuppressLint("ViewModelConstructorInComposable")
 @Composable
 fun NavGraph(navController: NavHostController) {
-    val repo = AuthRepository()
+    val repo = AuthRepository(context = LocalContext.current)
 
     val startDestination =
         if(repo.isLoggedIn())
@@ -118,7 +118,7 @@ fun NavGraph(navController: NavHostController) {
             LaunchedEffect(articleId) {
                 if (articleId != null) {
                     val repository = SavedRepository(context)
-                    savedArticle = repository.getOfflineArticle(articleId)
+                    savedArticle = repository.getOfflineArticle(articleId,repo.getCurrentUserId() ?: "")
                     isLoading = false
                 }
             }

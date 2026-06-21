@@ -56,7 +56,6 @@ fun MainScreen(
     onLogout: () -> Unit
 ) {
     var selectedTab by remember { mutableStateOf(0) }
-    val uiState by viewModel.uiState.collectAsState()
     Column(
         modifier = Modifier.fillMaxSize()
     ) {

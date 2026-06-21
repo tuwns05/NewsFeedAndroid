@@ -9,6 +9,7 @@ import com.example.newsfeed.data.remote.dto.ArticleDto
 data class SavedArticle(
     @PrimaryKey
     val id: Int,
+    val userId :String,
     val title: String,
     val description: String,
     val imageUrl: String?,
@@ -21,9 +22,11 @@ data class SavedArticle(
 )
 
 fun ArticleDto.toSavedArticle(
-    content: String
+    content: String,
+    userId: String
 ) = SavedArticle(
     id = id,
+    userId = userId,
     title = title,
     description = description,
     imageUrl = imageUrl,
