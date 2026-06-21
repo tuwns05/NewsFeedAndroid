@@ -84,7 +84,7 @@ fun SourceSection(
             items(sources) {source ->
                 FilterChip(
                     onClick = { onSourceSelected(source.id) },
-                    label = { Text(source.name ) },
+                    label = { Text(source.name + "-" + source.categoryName) },
                     selected = source.id == selectedSource
                 )
             }

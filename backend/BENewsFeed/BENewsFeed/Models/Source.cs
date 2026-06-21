@@ -16,4 +16,5 @@ public partial class Source
     public int? CategoryId { get; set; }
 
     public virtual ICollection<Article> Articles { get; set; } = new List<Article>();
+    public Category Category { get; set; } = null!;
 }
