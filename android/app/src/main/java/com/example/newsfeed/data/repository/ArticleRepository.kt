@@ -58,9 +58,11 @@ class ArticleRepository(
     }
 
     //Search
-//    suspend fun search(query: String): Result<List<ArticleDto>> {
-//
-//    }
-
+    suspend fun searchArticles(query: String): Result<List<ArticleDto>> = try {
+        val results = apiService.findArticle(query)
+        Result.success(results)
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
 
 }
