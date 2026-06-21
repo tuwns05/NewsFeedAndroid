@@ -21,6 +21,8 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Article
 import androidx.compose.material.icons.filled.AccountCircle
@@ -51,6 +53,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.SemanticsProperties.ImeAction
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -65,7 +68,7 @@ import com.example.newsfeed.data.remote.dto.CategoryDto
 import com.example.newsfeed.data.remote.dto.SourceDto
 import com.example.newsfeed.ui.model.HomeUiState
 import com.example.newsfeed.ui.model.HomeViewModel
-
+import androidx.compose.ui.text.input.ImeAction
 
 
 
@@ -93,7 +96,8 @@ fun HomeScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             HomeHeader(
-                onLogout = onLogout
+                onLogout = onLogout,
+                onSearch = { query -> viewModel.search(query) }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -124,7 +128,8 @@ fun HomeScreen(
 //Header
 @Composable
 fun HomeHeader(
-    onLogout: () -> Unit
+    onLogout: () -> Unit,
+    onSearch: (String) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
     var searchText by remember { mutableStateOf("") }
@@ -206,6 +211,10 @@ fun HomeHeader(
             BasicTextField(
                 value = searchText,
                 onValueChange = { searchText = it },
+                keyboardOptions = KeyboardOptions(imeAction = androidx.compose.ui.text.input.ImeAction.Search),
+                keyboardActions = KeyboardActions(
+                    onSearch = { onSearch(searchText) }
+                ),
                 textStyle = androidx.compose.ui.text.TextStyle(fontSize = 13.sp, color = Color.Black),
                 singleLine = true,
                 modifier = Modifier.weight(1f),

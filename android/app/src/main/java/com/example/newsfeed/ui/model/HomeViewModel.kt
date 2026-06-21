@@ -121,9 +121,25 @@ class HomeViewModel() : ViewModel(){
     }
 
     //Search
-   fun search(query: String){
+    fun search(query: String) {
+        // Nếu query rỗng, quay lại tải danh sách mặc định
+        if (query.isBlank()) {
+            loadArticles()
+            return
+        }
 
-   }
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isLoading = true, error = null)
+
+            val result = repository.searchArticles(query)
+
+            _uiState.value = _uiState.value.copy(
+                articles = result.getOrElse { emptyList() },
+                isLoading = false,
+                error = result.exceptionOrNull()?.message
+            )
+        }
+    }
 
 
 
