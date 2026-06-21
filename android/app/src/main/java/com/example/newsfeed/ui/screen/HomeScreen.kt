@@ -25,15 +25,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Article
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Article
-import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.Error
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Newspaper
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.outlined.BookmarkBorder
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Newspaper
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -42,7 +36,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -68,36 +61,20 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.example.newsfeed.data.remote.dto.ArticleDto
+import com.example.newsfeed.data.remote.dto.CategoryDto
+import com.example.newsfeed.data.remote.dto.SourceDto
 import com.example.newsfeed.ui.model.HomeUiState
 import com.example.newsfeed.ui.model.HomeViewModel
 
 
 
-// Danh sách chuyên mục
- val categories = listOf(
-    "Mới nhất"  to null,
-    "Công nghệ" to "cong-nghe",
-    "Thể thao"  to "the-thao",
-    "Giáo dục"  to "giao-duc",
-    "Giải trí"  to "giai-tri",
-    "Thế giới"  to "the-gioi"
-)
 
-// Danh sách nguồn báo
-private val sources = listOf(
-    "Tất cả"    to null,
-    "VnExpress" to 1,
-    "Tuổi Trẻ"  to 2,
-    "Thanh Niên" to 3
-)
 //data class cho từng tab của bottom navigation
 data class BottomNavItem(
     val label: String,
     val selectedIcon: ImageVector,
     val unselectedIcon: ImageVector
 )
-
-
 
 @Composable
 fun HomeScreen(
@@ -125,9 +102,10 @@ fun HomeScreen(
         CategorySection(
             viewModel,
             uiState,
-            categories = categories,
+            categories = uiState.categories,
             onCategorySelected = {
-                viewModel.onCategorySelected(it)
+                    slug ->
+                viewModel.onCategorySelected(slug)
             }
         )
 
@@ -243,39 +221,14 @@ fun HomeHeader(
 }
 
 //Nguồn báo
-@Composable
-fun SourceSection(
-    sources: List<Pair<String, Int?>>,
-    onSourceSelected: (Int?) -> Unit,
-    selectedSource: Int? = null
-){
-    Column {
-        Text(
-            text = "Nguồn báo" ,
-            style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-        LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            items(sources){
-                (name,id) ->
-                FilterChip(
-                onClick = { onSourceSelected(id) },
-                    label = { Text(name) },
-                    selected = id == selectedSource,
-                    modifier = Modifier.animateContentSize()
-                )
-            }
-        }
-    }
-}
+
 
 //Chuyên mục
 @Composable
 fun CategorySection(
     viewModel: HomeViewModel = viewModel(),
     uiState: HomeUiState,
-    categories : List<Pair<String, String?>>,
+    categories : List<(CategoryDto)>,
     onCategorySelected: (String?) -> Unit,
     selectedCategory: String? = null
 ){
@@ -297,11 +250,12 @@ fun CategorySection(
             RefreshIcon(viewModel, uiState)
         }
         LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            items(categories) { (name, slug) ->
+            items(categories) {categories ->
                 FilterChip(
-                    onClick = { onCategorySelected(slug) },
-                    selected =  slug == selectedCategory,
-                    label = { Text(name) }
+                    onClick = { onCategorySelected(categories.slug) },
+                    label = { Text(categories.name) },
+                    selected = categories.slug == selectedCategory,
+                    modifier = Modifier.animateContentSize()
                 )
             }
         }
@@ -392,6 +346,11 @@ fun ArticleCard(
                 )
                 Text(
                     text = article.description,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Text(
+                    text = article.publishedAt,
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

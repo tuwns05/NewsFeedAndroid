@@ -13,5 +13,7 @@ public partial class Source
 
     public bool? IsActive { get; set; }
 
+    public int? CategoryId { get; set; }
+
     public virtual ICollection<Article> Articles { get; set; } = new List<Article>();
 }

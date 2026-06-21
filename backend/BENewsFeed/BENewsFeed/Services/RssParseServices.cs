@@ -38,7 +38,6 @@ namespace BENewsFeed.Services
 
             var feed = SyndicationFeed.Load(reader);
 
-            var defaultCategoryId = 1;
 
             foreach (var item in feed.Items)
             {
@@ -51,7 +50,7 @@ namespace BENewsFeed.Services
                 var article = new Article
                 {
                     SourceId = source.Id,
-                    CategoryId = defaultCategoryId,
+                    CategoryId = source.CategoryId ?? 1,
                     Title = item.Title?.Text ?? "",
                     Description = CleanHtml(item.Summary?.Text ?? ""),
                     ImageUrl = ExtractImage(item),

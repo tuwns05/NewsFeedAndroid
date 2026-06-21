@@ -27,6 +27,7 @@ class ArticleRepository(
         Result.failure(e)
     }
 
+    //Lấy danh sách chuyên mục
     suspend fun getCategories(): Result<List<CategoryDto>> = try {
         Result.success(apiService.getCategories())
     } catch (e: Exception) {
