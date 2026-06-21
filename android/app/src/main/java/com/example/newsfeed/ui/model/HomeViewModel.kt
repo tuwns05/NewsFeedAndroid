@@ -20,8 +20,8 @@ data class HomeUiState(
     val error: String? = null,
     val selectedCategory: String? = null,
     val selectedSourceId: Int? = null,
-    val readArticleIds: Set<Int> = emptySet(),
     val categories: List<CategoryDto> = emptyList(),
+    val selectedTimeFilter: String? = null,
 )
 
 class HomeViewModel() : ViewModel(){
@@ -43,7 +43,8 @@ class HomeViewModel() : ViewModel(){
             )
             val result = repository.getArticles(
                 category = _uiState.value.selectedCategory,
-                sourceId = _uiState.value.selectedSourceId
+                sourceId = _uiState.value.selectedSourceId,
+                timeFilter = _uiState.value.selectedTimeFilter
             )
             _uiState.value = _uiState.value.copy(
                 articles = result.getOrElse { emptyList() },
@@ -64,6 +65,14 @@ class HomeViewModel() : ViewModel(){
             )
         }
     }
+    }
+
+    //set time filter
+    fun onTimeFilterSelected(timeFilter: String?) {
+        _uiState.value = _uiState.value.copy(
+            selectedTimeFilter = timeFilter
+        )
+        loadArticles()
     }
     fun onCategorySelected(slug: String?) {
         _uiState.value = _uiState.value.copy(
@@ -92,7 +101,8 @@ class HomeViewModel() : ViewModel(){
             //lấy lại danh sách mới nhất
             val result = repository.getArticles(
                 category = _uiState.value.selectedCategory,
-                sourceId = _uiState.value.selectedSourceId
+                sourceId = _uiState.value.selectedSourceId,
+                timeFilter = _uiState.value.selectedTimeFilter
             )
 
             _uiState.value = _uiState.value.copy(

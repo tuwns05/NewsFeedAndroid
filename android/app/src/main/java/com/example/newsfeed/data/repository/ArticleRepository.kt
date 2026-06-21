@@ -1,7 +1,5 @@
 package com.example.newsfeed.data.repository
 
-import com.example.newsfeed.data.dao.ReadArticleDao
-import com.example.newsfeed.data.entity.ReadArticle
 import com.example.newsfeed.data.remote.ApiService
 import com.example.newsfeed.data.remote.RetrofitClient
 import com.example.newsfeed.data.remote.dto.ArticleDto
@@ -17,10 +15,12 @@ class ArticleRepository(
     suspend fun getArticles(
         category: String? = null,
         sourceId: Int? = null,
+        timeFilter: String? = null
     ): Result<List<ArticleDto>> = try {
         val articles = apiService.getArticles(
             category = category,
-            sourceId = sourceId
+            sourceId = sourceId,
+            timeFilter = timeFilter
         )
         Result.success(articles)
     } catch (e: Exception) {

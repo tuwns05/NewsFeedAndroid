@@ -15,6 +15,7 @@ interface ApiService {
     suspend fun getArticles(
         @Query("category") category: String? = null,
         @Query("sourceId") sourceId: Int?    = null,
+        @Query("timeFilter") timeFilter: String? = null
     ): List<ArticleDto>
 
     //Lấy chi tiết 1 bài

@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
@@ -34,6 +35,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -69,7 +71,7 @@ import com.example.newsfeed.data.remote.dto.SourceDto
 import com.example.newsfeed.ui.model.HomeUiState
 import com.example.newsfeed.ui.model.HomeViewModel
 import androidx.compose.ui.text.input.ImeAction
-
+import com.example.newsfeed.data.utils.Util.isNetworkAvailable
 
 
 //data class cho từng tab của bottom navigation
@@ -94,25 +96,33 @@ fun HomeScreen(
             modifier = Modifier.padding(horizontal = 16.dp)
         ) {
             Spacer(modifier = Modifier.height(8.dp))
-
             HomeHeader(
                 onLogout = onLogout,
                 onSearch = { query -> viewModel.search(query) }
             )
-
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(5.dp))
+            //Chọn chuyên mục
+            CategorySection(
+                viewModel,
+                uiState,
+                categories = uiState.categories,
+                onCategorySelected = {
+                        slug ->
+                    viewModel.onCategorySelected(slug)
+                },
+                selectedCategory = uiState.selectedCategory
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            //Chọn thời gian
+            TimeSection(
+                selectedTimeFilter = uiState.selectedTimeFilter,
+                onTimeFilterSelected = {
+                        timeFilter ->
+                    viewModel.onTimeFilterSelected(timeFilter)
+                }
+            )
         }
-
-        CategorySection(
-            viewModel,
-            uiState,
-            categories = uiState.categories,
-            onCategorySelected = {
-                    slug ->
-                viewModel.onCategorySelected(slug)
-            }
-        )
-
+        Spacer(modifier = Modifier.height(8.dp))
         HorizontalDivider(
             thickness = 1.dp,
             color = MaterialTheme.colorScheme.outlineVariant
@@ -148,88 +158,104 @@ fun HomeHeader(
                 Text(
                     text = "News Feed",
                     style = MaterialTheme.typography.headlineMedium.copy(
-                        fontWeight = FontWeight.Bold
-                    )
+                        fontWeight = FontWeight.ExtraBold
+                    ),
+                    color = MaterialTheme.colorScheme.primary
                 )
-
                 Text(
                     text = "Tin tức mới nhất hôm nay",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-
-            Box {
-                IconButton(
-                    onClick = {
-                        expanded = true
-                    }
+                Box(
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.secondaryContainer),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.AccountCircle,
-                        contentDescription = "Tài khoản"
-                    )
-                }
-
-                DropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = {
-                        expanded = false
-                    }
-                ) {
-                    DropdownMenuItem(
-                        text = {
-                            Text("Đăng xuất")
-                        },
+                    IconButton(
                         onClick = {
-                            expanded = false
-                            onLogout()
+                            expanded = true
                         }
-                    )
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.AccountCircle,
+                            contentDescription = "Tài khoản"
+                        )
+                    }
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = {
+                            expanded = false
+                        }
+                    ) {
+                        DropdownMenuItem(
+                            text = {
+                                Text("Đăng xuất")
+                            },
+                            onClick = {
+                                expanded = false
+                                onLogout()
+                            }
+                        )
+                    }
                 }
             }
-        }
+            Spacer(modifier = Modifier.height(10.dp))
 
-        Spacer(modifier = Modifier.height(16.dp))
+                Surface(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(32.dp),
+                    shape = RoundedCornerShape(10.dp),
+                    color = MaterialTheme.colorScheme.surfaceVariant,
+                    tonalElevation = 1.dp
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = 14.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Search,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.size(16.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        BasicTextField(
+                            value = searchText,
+                            onValueChange = { searchText = it },
+                            keyboardOptions = KeyboardOptions(imeAction = androidx.compose.ui.text.input.ImeAction.Search),
+                            keyboardActions = KeyboardActions(
+                                onSearch = { onSearch(searchText) }
+                            ),
+                            textStyle = androidx.compose.ui.text.TextStyle(
+                                fontSize = 13.sp,
+                                color = MaterialTheme.colorScheme.onSurface),
+                            singleLine = true,
+                            modifier = Modifier.weight(1f),
+                            decorationBox = { innerTextField ->
+                                if (searchText.isEmpty()) {
+                                    Text(
+                                        "Tìm kiếm tin tức...",
+                                        fontSize = 13.sp,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
+                                innerTextField()
+                            }
+                        )
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(0.85f)
-                .height(40.dp)
-                .align(Alignment.CenterHorizontally)
-                .border(1.dp, Color.LightGray, RoundedCornerShape(20.dp))
-                .padding(horizontal = 12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                imageVector = Icons.Default.Search,
-                contentDescription = null,
-                tint = Color.Gray,
-                modifier = Modifier.size(18.dp)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            BasicTextField(
-                value = searchText,
-                onValueChange = { searchText = it },
-                keyboardOptions = KeyboardOptions(imeAction = androidx.compose.ui.text.input.ImeAction.Search),
-                keyboardActions = KeyboardActions(
-                    onSearch = { onSearch(searchText) }
-                ),
-                textStyle = androidx.compose.ui.text.TextStyle(fontSize = 13.sp, color = Color.Black),
-                singleLine = true,
-                modifier = Modifier.weight(1f),
-                decorationBox = { innerTextField ->
-                    if (searchText.isEmpty()) {
-                        Text("Tìm kiếm tin tức...", fontSize = 13.sp, color = Color.Gray)
                     }
-                    innerTextField()
                 }
-            )
-        }
-    }
+            }
+
 }
 
-//Nguồn báo
 
 
 //Chuyên mục
@@ -237,38 +263,44 @@ fun HomeHeader(
 fun CategorySection(
     viewModel: HomeViewModel = viewModel(),
     uiState: HomeUiState,
-    categories : List<(CategoryDto)>,
+    categories : List<CategoryDto>,
     onCategorySelected: (String?) -> Unit,
     selectedCategory: String? = null
 ){
-
-    Column {
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = "Chuyên mục",
-                style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
 
-            Spacer(modifier = Modifier.weight(1f))
+            LazyRow( modifier = Modifier.weight(1f),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                items(categories)
+                { categories ->
+                    FilterChip(
+                        // truyền về slug
+                        onClick = { onCategorySelected(categories.slug) },
+                        label = { Text(categories.name, style = MaterialTheme.typography.labelMedium) },
+                        // trạng thái đã chọn filterchip
+                        selected = categories.slug == selectedCategory,
+                        shape = RoundedCornerShape(20),
+                        colors = FilterChipDefaults.filterChipColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                            labelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                            selectedContainerColor = MaterialTheme.colorScheme.primary,
+                            selectedLabelColor = MaterialTheme.colorScheme.onPrimary
+                        ),
+                        border = null,
+                        modifier = Modifier
+                            .height(25.dp)
+                            .animateContentSize()
+                    )
+                }
 
+            }
+            Spacer(modifier = Modifier.width(2.dp))
             RefreshIcon(viewModel, uiState)
         }
-        LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            items(categories) {categories ->
-                FilterChip(
-                    onClick = { onCategorySelected(categories.slug) },
-                    label = { Text(categories.name) },
-                    selected = categories.slug == selectedCategory,
-                    modifier = Modifier.animateContentSize()
-                )
-            }
-        }
-    }
+
 }
 
 //DANH SÁCH ARTICLE
@@ -277,6 +309,7 @@ fun ArticleList(
     uiState: HomeUiState,
     onArticleClick: (ArticleDto) -> Unit
 ){
+    val context = LocalContext.current
     when{
         uiState.isLoading->{
             Box(
@@ -285,6 +318,10 @@ fun ArticleList(
             ){
                 CircularProgressIndicator()
             }
+        }
+        //kiểm tra internet
+        !isNetworkAvailable(context) -> {
+           ErrorView("Không có kết nối mạng")
         }
         uiState.error != null -> {
             ErrorView(error = uiState.error)
@@ -442,25 +479,71 @@ fun ArticleCard(
         }
     }
 
+//Icon refresh
 @Composable
 fun RefreshIcon(viewModel: HomeViewModel, uiState: HomeUiState){
-    IconButton(
-        onClick = { viewModel.refreshNews() },
-        enabled = !uiState.isRefreshing
+    Box(
+        modifier = Modifier.size(25.dp).clip(CircleShape)
+            .background(MaterialTheme.colorScheme.surfaceVariant),
+        contentAlignment = Alignment.Center
     ) {
-        if (uiState.isRefreshing) {
-            CircularProgressIndicator(
-                modifier = Modifier.size(20.dp),
-                strokeWidth = 2.dp
-            )
-        } else {
-            Icon(
-                Icons.Default.Refresh,
-                contentDescription = "Cập nhật"
-            )
+        IconButton(
+            onClick = { viewModel.refreshNews() },
+            enabled = !uiState.isRefreshing
+        ) {
+            if (uiState.isRefreshing) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(10.dp),
+                    strokeWidth = 2.dp
+                )
+            } else {
+                Icon(
+                    Icons.Default.Refresh,
+                    contentDescription = "Cập nhật"
+                )
+            }
         }
     }
 }
+
+@Composable
+fun TimeSection(selectedTimeFilter: String?,
+                onTimeFilterSelected: (String?) -> Unit){
+    val timeFilters = listOf(
+        "Tất cả" to null,
+        "Hôm nay" to "today",
+        "3 ngày" to "3days",
+        "7 ngày" to "7days",
+        "1 tháng" to "1month"
+    )
+
+        LazyRow(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+
+            items(timeFilters) {
+                (label, value) ->
+                FilterChip(
+                    onClick = { onTimeFilterSelected(value) },
+                    selected = value == selectedTimeFilter,
+                    label = { Text(label, style = MaterialTheme.typography.labelMedium) },
+                    shape = RoundedCornerShape(20),
+                    colors = FilterChipDefaults.filterChipColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                        labelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        selectedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        selectedLabelColor = MaterialTheme.colorScheme.onSecondaryContainer
+                    ),
+                    border = null,
+                    modifier = Modifier
+                        .height(25.dp)
+                        .animateContentSize()
+                )
+            }
+        }
+}
+
 
 
 

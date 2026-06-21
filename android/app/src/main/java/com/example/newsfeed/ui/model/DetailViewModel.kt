@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.newsfeed.data.database.AppDatabase
 import com.example.newsfeed.data.entity.SavedArticle
 import com.example.newsfeed.data.remote.dto.ArticleDto
+import com.example.newsfeed.data.repository.AuthRepository
 import com.example.newsfeed.data.repository.SavedRepository
 import com.example.newsfeed.worker.ArticleContentScraper
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,6 +32,12 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     val _isSaved = MutableStateFlow(false)
 
     private var savedJob: kotlinx.coroutines.Job? = null
+
+    private val authRepo = AuthRepository(application)
+    //Lấy id user
+    val userId: String
+        get() = authRepo.getCurrentUserId() ?: ""
+
     fun loadArticleContent(url: String?) {
 
         if (url.isNullOrBlank()) {
@@ -50,19 +57,19 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     fun observeSavedState(articleId: Int) {
         savedJob?.cancel() // hủy job cũ nếu có
         savedJob = viewModelScope.launch {
-            repository.isSaved(articleId).collect { saved ->
+            repository.isSaved(articleId,userId).collect { saved ->
                 _isSaved.value = saved
             }
         }
     }
 
     // Toggle lưu/bỏ lưu
-    fun toggleSave(article: ArticleDto, content: String) {
+    fun toggleSave(article: ArticleDto, content: String, userId: String) {
         viewModelScope.launch {
             if (_isSaved.value) {
-                repository.unsave(article.id)
+                repository.unsave(article.id,userId)
             } else {
-                repository.save(article, content)
+                repository.save(article, content,userId)
             }
         }
     }

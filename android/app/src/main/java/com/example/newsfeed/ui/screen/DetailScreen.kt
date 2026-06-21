@@ -1,6 +1,6 @@
 package com.example.newsfeed.ui.screen
 
-import android.R.attr.content
+
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
@@ -10,16 +10,22 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Article
-import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material.icons.filled.OpenInNew
+import androidx.compose.material.icons.filled.PlayCircle
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.Stop
+import androidx.compose.material.icons.filled.VolumeUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,7 +33,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
@@ -36,8 +41,7 @@ import coil3.request.crossfade
 import com.example.newsfeed.data.remote.dto.ArticleDto
 import com.example.newsfeed.data.utils.Util
 import com.example.newsfeed.ui.model.DetailViewModel
-import com.example.newsfeed.ui.model.HomeViewModel
-import java.io.Console
+import com.example.newsfeed.worker.TTSManager
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -57,6 +61,11 @@ fun DetailScreen(
 
     val displayContent = offlineContent ?: content
 
+    val userId = viewModel.userId
+
+    val ttsManager = remember { TTSManager(context) }
+
+    var isSpeaking by remember { mutableStateOf(false) }
 
     // Kiểm tra article null
     if (article == null) {
@@ -137,7 +146,7 @@ fun DetailScreen(
                         onClick = {
                             Log.d("DETAIL", "Content = $content")
                             println("Content = $content")
-                            viewModel.toggleSave(article,displayContent?: "Không có nội dung" )
+                            viewModel.toggleSave(article,displayContent?: "Không có nội dung",userId )
                         }) {
                         Icon(
                             imageVector = if (isSaved) Icons.Default.Bookmark
@@ -215,6 +224,50 @@ fun DetailScreen(
                             modifier = Modifier.size(40.dp)
                         )
                     }
+                }
+                HorizontalDivider()
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
+                    horizontalArrangement = Arrangement.End,
+                            verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(
+                        onClick = {
+                            if (isSpeaking) {
+                                ttsManager.stop()
+                                isSpeaking = false
+                            } else {
+                                val text = displayContent ?: "Không có nội dung"
+                                if (text.isNotEmpty()) {
+                                    isSpeaking = true
+                                    ttsManager.speak(text)
+                                }
+                            }
+                        }
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(48.dp)
+                                .clip(RoundedCornerShape(8.dp))
+                                .background(MaterialTheme.colorScheme.primaryContainer)
+                                .padding(8.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                if (isSpeaking) Icons.Default.Stop else Icons.Default.PlayCircle
+                                ,
+                                contentDescription = if (isSpeaking) "Dừng" else "Đọc"
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = if (isSpeaking) "Đang đọc..." else "Nghe nội dung",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
                 }
                 Spacer(modifier = Modifier.height(16.dp))
 

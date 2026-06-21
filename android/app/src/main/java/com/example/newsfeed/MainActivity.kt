@@ -5,8 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.navigation.compose.rememberNavController
-import com.example.newsfeed.data.dao.ReadArticleDao
-import com.example.newsfeed.data.entity.ReadArticle
 import com.example.newsfeed.data.repository.ArticleRepository
 import com.example.newsfeed.navigation.NavGraph
 import com.example.newsfeed.ui.model.HomeViewModel

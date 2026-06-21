@@ -46,7 +46,7 @@ fun SavedScreen(
     onArticleClick: (SavedArticle) -> Unit,
     onBack: () -> Unit
 ){
-    val savedArticles by viewModel.getArticles.collectAsStateWithLifecycle(emptyList())
+    val savedArticles by viewModel.savedArticles.collectAsStateWithLifecycle()
     Scaffold(
         topBar = {
             TopAppBar(
