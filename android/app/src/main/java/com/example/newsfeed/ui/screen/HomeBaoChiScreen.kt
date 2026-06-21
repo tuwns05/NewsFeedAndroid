@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.FilterChip
@@ -14,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -73,12 +75,16 @@ fun SourceSection(
     onSourceSelected: (Int?) -> Unit,
     selectedSource: Int? = null
 ){
-    Column {
+    Column ( modifier = Modifier
+        .statusBarsPadding()
+        .padding(horizontal = 16.dp, vertical = 8.dp))
+    {
         Text(
             text = "Nguồn báo" ,
-            style = MaterialTheme.typography.labelLarge,
+            style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.padding(bottom = 8.dp)
+            modifier = Modifier.padding(bottom = 8.dp),
+            fontWeight = FontWeight.Bold
         )
         LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             items(sources) {source ->
