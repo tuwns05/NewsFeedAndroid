@@ -21,10 +21,13 @@ namespace BENewsFeed.Controllers
         {
             var sources = await _db.Sources
                 .Where(s => s.IsActive == true)
+                .Include(s => s.Category) // Bao gồm thông tin chuyên mục nếu cần thiết
                 .Select(s => new SourceDto
                 {
                     Id = s.Id,
-                    Name = s.Name
+                    Name = s.Name,
+                    CategoryName = s.Category != null ? s.Category.Name : ""
+
                 })
                 .ToListAsync();
 
