@@ -58,7 +58,6 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
 
     // Toggle lưu/bỏ lưu
     fun toggleSave(article: ArticleDto, content: String) {
-        Log.d("DETAIL2", "Save content = $content")
         viewModelScope.launch {
             if (_isSaved.value) {
                 repository.unsave(article.id)

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.newsfeed.data.remote.dto.ArticleDto
+import com.example.newsfeed.data.remote.dto.CategoryDto
 import com.example.newsfeed.data.repository.ArticleRepository
 import com.example.newsfeed.data.repository.SavedRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +20,8 @@ data class HomeUiState(
     val error: String? = null,
     val selectedCategory: String? = null,
     val selectedSourceId: Int? = null,
-    val readArticleIds: Set<Int> = emptySet()
+    val readArticleIds: Set<Int> = emptySet(),
+    val categories: List<CategoryDto> = emptyList(),
 )
 
 class HomeViewModel() : ViewModel(){
@@ -29,7 +31,7 @@ class HomeViewModel() : ViewModel(){
 
     init {
         loadArticles()
-
+        loadCategories()
     }
 
     fun loadArticles(isRefresh: Boolean = false) {
@@ -52,6 +54,17 @@ class HomeViewModel() : ViewModel(){
         }
     }
 
+    fun loadCategories() {
+        viewModelScope.launch {
+        // Load categories
+        val categoriesResult = repository.getCategories()
+        if (categoriesResult.isSuccess) {
+            _uiState.value = _uiState.value.copy(
+                categories = categoriesResult.getOrNull() ?: emptyList()
+            )
+        }
+    }
+    }
     fun onCategorySelected(slug: String?) {
         _uiState.value = _uiState.value.copy(
             selectedCategory = slug,

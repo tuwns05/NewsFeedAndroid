@@ -2,13 +2,23 @@ package com.example.newsfeed.ui.model
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.newsfeed.data.remote.dto.ArticleDto
+import com.example.newsfeed.data.remote.dto.SourceDto
 import com.example.newsfeed.data.repository.ArticleRepository
-import com.example.newsfeed.ui.screen.BaoChiUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
+// --- UI State riêng cho màn hình Báo chí ---
+data class BaoChiUiState(
+    val articles: List<ArticleDto> = emptyList(),
+    val isLoading: Boolean = false,
+    val error: String? = null,
+    val selectedSourceId: Int? = null,
+    val sources : List<SourceDto> = emptyList()
+
+)
 class BaoChiViewModel : ViewModel() {
     private val repository = ArticleRepository()
     private val _uiState = MutableStateFlow(BaoChiUiState())
@@ -16,6 +26,8 @@ class BaoChiViewModel : ViewModel() {
 
     init {
         loadArticlesForSource(null)
+        loadSources()
+
     }
 
     fun selectSource(sourceId: Int?) {
@@ -31,6 +43,15 @@ class BaoChiViewModel : ViewModel() {
                 articles = result.getOrElse { emptyList() },
                 isLoading = false,
                 error = result.exceptionOrNull()?.message
+            )
+        }
+    }
+    //lấy source
+    private fun loadSources() {
+        viewModelScope.launch {
+            val result = repository.getSources()
+            _uiState.value = _uiState.value.copy(
+                sources = result.getOrElse { emptyList() }
             )
         }
     }

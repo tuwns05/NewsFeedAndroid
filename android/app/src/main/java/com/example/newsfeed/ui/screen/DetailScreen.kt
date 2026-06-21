@@ -34,6 +34,7 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.example.newsfeed.data.remote.dto.ArticleDto
+import com.example.newsfeed.data.utils.Util
 import com.example.newsfeed.ui.model.DetailViewModel
 import com.example.newsfeed.ui.model.HomeViewModel
 import java.io.Console
@@ -55,6 +56,7 @@ fun DetailScreen(
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
     val displayContent = offlineContent ?: content
+
 
     // Kiểm tra article null
     if (article == null) {
@@ -124,7 +126,7 @@ fun DetailScreen(
                 ) {
                     if (article.publishedAt.isNotEmpty()) {
                         Text(
-                            text = "📅 ${formatDate(article.publishedAt)}",
+                            text = "📅 ${Util.formatDate(article.publishedAt)}",
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -237,11 +239,4 @@ fun DetailScreen(
     }
 }
 
-// Format ngày tháng đơn giản
-private fun formatDate(dateString: String): String {
-    return if (dateString.length >= 10) {
-        dateString.substring(0, 10) // Lấy "YYYY-MM-DD"
-    } else {
-        dateString
-    }
-}
+
